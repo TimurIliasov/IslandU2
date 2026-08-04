@@ -1,6 +1,6 @@
 package ru.javarush.iliasov.cryptoanalyzer;
 
-import ru.javarush.iliasov.cryptoanalyzer.Organisms.Animals;
+import ru.javarush.iliasov.cryptoanalyzer.Organisms.Animal;
 import ru.javarush.iliasov.cryptoanalyzer.Organisms.Plants;
 
 import java.util.Collections;
@@ -8,15 +8,15 @@ import java.util.List;
 import java.util.Objects;
 
 public class Cell {
-    private final List<Animals> animalsList;
+    private final List<Animal> animalsList;
     private final List<Plants> plantsList;
 
-    public Cell(List<Animals> animalsList, List<Plants> plantsList) {
+    public Cell(List<Animal> animalsList, List<Plants> plantsList) {
         this.animalsList = Objects.requireNonNull(animalsList);
         this.plantsList = Objects.requireNonNull(plantsList);
     }
 
-    public List<Animals> getAnimalsList(){
+    public List<Animal> getAnimalsList(){
         return Collections.unmodifiableList(animalsList);
     }
 
@@ -24,14 +24,14 @@ public class Cell {
         return Collections.unmodifiableList(plantsList);
     }
 
-    public boolean addAnimal(Animals animal){
+    public boolean addAnimal(Animal animal){
         if (animal ==null){
             return false;
         }
         return animalsList.add(animal);
     }
 
-    public boolean removeAnimal(Animals animal){
+    public boolean removeAnimal(Animal animal){
         return animalsList.remove(animal);
     }
 
