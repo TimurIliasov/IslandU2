@@ -5,12 +5,12 @@ import java.util.Map;
 
 public class AnimalConfig {
     private final int speed;
-    private final int foodNeeded;
+    private final double foodNeeded;
     private final Map<AnimalType, Integer> huntingProbability;
     private final int maxInCell;
-    private final int startWeight;
+    private final double startWeight;
 
-    public AnimalConfig(int speed, int foodNeeded, Map<AnimalType, Integer> huntingProbability, int maxInCell, int startWeight) {
+    public AnimalConfig(int speed, double foodNeeded, Map<AnimalType, Integer> huntingProbability, int maxInCell, double startWeight) {
         this.speed = speed;
         this.foodNeeded = foodNeeded;
         this.huntingProbability = Map.copyOf(huntingProbability);
@@ -22,7 +22,7 @@ public class AnimalConfig {
         return speed;
     }
 
-    public int getFoodNeeded(){
+    public double getFoodNeeded(){
         return foodNeeded;
     }
 
@@ -38,7 +38,7 @@ public class AnimalConfig {
         return maxInCell;
     }
 
-    public int getStartWeight(){
+    public double getStartWeight(){
         return startWeight;
     }
 

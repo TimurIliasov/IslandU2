@@ -1,0 +1,39 @@
+{
+  "animals": {
+    "WOLF": {
+      "speed": 3,
+      "foodNeeded": 8,
+      "maxInCell": 30,
+      "startWeight": 50,
+      "huntingProbability": {
+        "RABBIT": 60,
+        "MOUSE": 80,
+        "GOAT": 60,
+        "SHEEP": 70,
+        "HORSE": 10,
+        "DEER": 15
+      }
+    },
+    "FOX": {
+      "speed": 2,
+      "foodNeeded": 2,
+      "maxInCell": 30,
+      "startWeight": 8,
+      "huntingProbability": {
+        "RABBIT": 70,
+        "MOUSE": 90
+      }
+    },
+    "RABBIT": {
+      "speed": 2,
+      "foodNeeded": 0.45,
+      "maxInCell": 150,
+      "startWeight": 2,
+      "huntingProbability": {
+
+      }
+    }
+  }
+}
+
+
