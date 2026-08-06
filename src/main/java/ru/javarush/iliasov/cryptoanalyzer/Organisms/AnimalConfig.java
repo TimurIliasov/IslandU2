@@ -1,6 +1,9 @@
 package ru.javarush.iliasov.cryptoanalyzer.Organisms;
 
-import java.util.Collections;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+
 import java.util.Map;
 
 public class AnimalConfig {
@@ -10,7 +13,8 @@ public class AnimalConfig {
     private final int maxInCell;
     private final double startWeight;
 
-    public AnimalConfig(int speed, double foodNeeded, Map<AnimalType, Integer> huntingProbability, int maxInCell, double startWeight) {
+    @JsonCreator
+    public AnimalConfig(@JsonProperty("speed") int speed,@JsonProperty("foodNeeded") double foodNeeded, @JsonProperty("huntingProbability") Map<AnimalType, Integer> huntingProbability, @JsonProperty("maxInCell") int maxInCell, @JsonProperty("startWeight") double startWeight) {
         this.speed = speed;
         this.foodNeeded = foodNeeded;
         this.huntingProbability = Map.copyOf(huntingProbability);
