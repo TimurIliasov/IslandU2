@@ -3,18 +3,20 @@ package ru.javarush.iliasov.cryptoanalyzer.Organisms;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
+
 
 
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class ConfigLoader {
     private final Map<AnimalType, AnimalConfig> configs;
 
-    public ConfigLoader(Map<AnimalType, AnimalConfig> configs) {
-        this.configs = configs;
+    public ConfigLoader() throws IOException {
+        configs = new LinkedHashMap<>();
+        readValue();
     }
 
 
@@ -23,7 +25,9 @@ public class ConfigLoader {
     }
 
 
-    public void readValue() throws IOException {
+
+
+    private void readValue() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode jsonNode = mapper.readTree(this.getClass().getResource("/animals.json"));
         JsonNode animalsNode = jsonNode.get("animals");
@@ -32,7 +36,7 @@ public class ConfigLoader {
             try {
                 configs.put(AnimalType.valueOf(e.getKey()), mapper.treeToValue(e.getValue(), AnimalConfig.class));
             } catch (JsonProcessingException ex) {
-                throw new RuntimeException("Failed to upload animal configuration" + e.getKey(), ex);
+                throw new RuntimeException("Failed to upload animal configuration: " + e.getKey(), ex);
             }
         });
 
