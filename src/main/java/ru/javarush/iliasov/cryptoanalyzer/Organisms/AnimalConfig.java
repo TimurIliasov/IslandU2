@@ -22,6 +22,7 @@ public class AnimalConfig {
         this.startWeight = startWeight;
     }
 
+
     public int getSpeed(){
         return speed;
     }
