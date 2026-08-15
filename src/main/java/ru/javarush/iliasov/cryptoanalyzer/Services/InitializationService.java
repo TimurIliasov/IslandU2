@@ -40,5 +40,12 @@ public class InitializationService {
             }
         }
     }
+
+    public void startIsland(ConfigLoader configLoader){
+        cellPlant();
+        for (AnimalType type: AnimalType.values()){
+            cellAnimal(configLoader, type);
+        }
+    }
 }
 
