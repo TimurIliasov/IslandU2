@@ -4,6 +4,7 @@ import ru.javarush.iliasov.cryptoanalyzer.Cell;
 import ru.javarush.iliasov.cryptoanalyzer.Island;
 import ru.javarush.iliasov.cryptoanalyzer.Organisms.Animal;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +19,7 @@ public class MovementServices {
 
 
     public void move() {
-        Map<Animal, Movement> movementMap = new LinkedHashMap<>();
+        Map<Animal, Movement> movementMap = new HashMap<>();
         for (int i = 0; i < island.getCells().length; i++) {
             for (int j = 0; j < island.getCells()[i].length; j++) {
                 Cell cell = island.getCells()[i][j];
