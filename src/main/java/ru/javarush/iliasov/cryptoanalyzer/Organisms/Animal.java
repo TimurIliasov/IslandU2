@@ -1,7 +1,7 @@
 package ru.javarush.iliasov.cryptoanalyzer.Organisms;
 
 public class Animal {
-    private int currentWeight;
+    private double currentWeight;
     private final AnimalType type;
     private boolean isAlive;
     private AnimalConfig config;
@@ -20,5 +20,13 @@ public class Animal {
 
     public AnimalConfig getConfig(){
         return config;
+    }
+
+    public double getWeight(){
+        return currentWeight;
+    }
+
+    public void setWeight(double currentWeight){
+        this.currentWeight = currentWeight;
     }
 }
