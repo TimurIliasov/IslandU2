@@ -46,6 +46,7 @@ public class MovementService {
             case 1 -> newI += distance;
             case 2 -> newJ -= distance;
             case 3 -> newJ += distance;
+            default -> direction = 0;
         }
 
         if (newI < 0
