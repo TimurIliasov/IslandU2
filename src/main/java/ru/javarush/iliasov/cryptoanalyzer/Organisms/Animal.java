@@ -29,4 +29,14 @@ public class Animal {
     public void setWeight(double currentWeight){
         this.currentWeight = currentWeight;
     }
+
+    public void setAlive(boolean isAlive){
+        this.isAlive = isAlive;
+    }
+
+    public void eat(Animal prey){
+        double foodConsumed = prey.getWeight();
+        setWeight(getWeight() + foodConsumed);
+        prey.setAlive(false);
+    }
 }

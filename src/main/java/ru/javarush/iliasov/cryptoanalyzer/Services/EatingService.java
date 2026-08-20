@@ -19,9 +19,7 @@ public class EatingService {
     int probability = hunter.getConfig().getHuntingProbability(prey.getType());
     int randomPrey = ThreadLocalRandom.current().nextInt(100);
     if (randomPrey < probability){
-        cells.getAnimalsList().remove(prey);
-        double foodConsumed = prey.getWeight();
-        hunter.setWeight(hunter.getWeight() + foodConsumed);
+        hunter.eat(prey);
     }
     }
 }
