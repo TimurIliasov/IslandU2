@@ -1,5 +1,9 @@
 package ru.javarush.iliasov.cryptoanalyzer.Organisms;
 
+import ru.javarush.iliasov.cryptoanalyzer.Island;
+
+import java.util.Objects;
+
 public class Animal {
     private double currentWeight;
     private final AnimalType type;
@@ -38,5 +42,14 @@ public class Animal {
         double foodConsumed = prey.getWeight();
         setWeight(getWeight() + foodConsumed);
         prey.setAlive(false);
+    }
+
+    public void reproduce(Island island){
+        int currentNumber = island.;
+        if (first.getConfig().getMaxInCell() > currentNumber) {
+            if (Objects.equals(first, second)) {
+                currentNumber++;
+            }
+        }
     }
 }

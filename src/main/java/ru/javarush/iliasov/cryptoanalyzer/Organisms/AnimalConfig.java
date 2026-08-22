@@ -2,6 +2,7 @@ package ru.javarush.iliasov.cryptoanalyzer.Organisms;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import ru.javarush.iliasov.cryptoanalyzer.Cell;
 
 
 import java.util.Map;
@@ -42,6 +43,10 @@ public class AnimalConfig {
     public int getMaxInCell(){
         return maxInCell;
     }
+
+    public long getCurrentAnimalCount(Cell cell, AnimalType type){ return cell.getAnimalsList()
+            .stream()
+            .filter(animal -> animal.getType().equals(type)).count();}
 
     public double getStartWeight(){
         return startWeight;
