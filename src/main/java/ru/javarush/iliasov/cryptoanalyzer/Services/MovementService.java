@@ -35,7 +35,7 @@ public class MovementService {
     }
 
     private Movement createMovement(Animal animal, int i, int j) {
-        int distance = ThreadLocalRandom.current().nextInt(0, animal.getConfig().getSpeed() + 1);
+        int distance = ThreadLocalRandom.current().nextInt(1, animal.getConfig().getSpeed() + 1);
         int direction = ThreadLocalRandom.current().nextInt(0, 4);
 
         int newI = i;
@@ -46,7 +46,6 @@ public class MovementService {
             case 1 -> newI += distance;
             case 2 -> newJ -= distance;
             case 3 -> newJ += distance;
-            default -> direction = 0;
         }
 
         if (newI < 0

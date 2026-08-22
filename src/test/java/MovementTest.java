@@ -1,5 +1,4 @@
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import ru.javarush.iliasov.cryptoanalyzer.Cell;
 import ru.javarush.iliasov.cryptoanalyzer.Island;
 import ru.javarush.iliasov.cryptoanalyzer.Organisms.*;
@@ -7,8 +6,6 @@ import ru.javarush.iliasov.cryptoanalyzer.Services.MovementService;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
 
 import static java.lang.Character.getType;
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,30 +24,35 @@ public class MovementTest {
             }
         }
 
+
         ConfigLoader configLoader = new ConfigLoader();
         AnimalFactory factory = new AnimalFactory(configLoader);
         Animal animal = factory.create(WOLF);
-        island.getCells()[0][0].addAnimal(animal);
-
+        island.getCells()[2][2].addAnimal(animal);
+        System.out.println(animal.getConfig().getSpeed());
 
         MovementService movementService = new MovementService(island);
         movementService.move();
 
-        assertFalse(island.getCells()[0][0].getAnimalsList().contains(
-                animal));
+        assertFalse(island.getCells()[2][2].getAnimalsList()
+                .contains(animal));
 
-        boolean findedMovement = false;
+
+
+        boolean foundMovement = false;
         for (int i = 0; i < island.getCells().length; i++) {
             for (int j = 0; j < island.getCells()[i].length; j++) {
+                if (i==2 && j==2){
+                    continue;
+                }
                 if (island.getCells()[i][j].getAnimalsList().contains(animal)) {
-                    findedMovement = true;
-                    break;
+                    foundMovement = true;
                 }
             }
-            if (findedMovement){
+            if (foundMovement) {
                 break;
             }
         }
-        assertTrue(findedMovement);
+        assertTrue(foundMovement);
     }
 }
