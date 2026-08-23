@@ -44,9 +44,7 @@ public class AnimalConfig {
         return maxInCell;
     }
 
-    public long getCurrentAnimalCount(Cell cell, AnimalType type){ return cell.getAnimalsList()
-            .stream()
-            .filter(animal -> animal.getType().equals(type)).count();}
+
 
     public double getStartWeight(){
         return startWeight;

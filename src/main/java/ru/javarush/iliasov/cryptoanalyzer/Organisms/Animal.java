@@ -1,5 +1,6 @@
 package ru.javarush.iliasov.cryptoanalyzer.Organisms;
 
+import ru.javarush.iliasov.cryptoanalyzer.Cell;
 import ru.javarush.iliasov.cryptoanalyzer.Island;
 
 import java.util.Objects;
@@ -44,12 +45,5 @@ public class Animal {
         prey.setAlive(false);
     }
 
-    public void reproduce(Island island){
-        int currentNumber = island.;
-        if (first.getConfig().getMaxInCell() > currentNumber) {
-            if (Objects.equals(first, second)) {
-                currentNumber++;
-            }
-        }
     }
-}
+

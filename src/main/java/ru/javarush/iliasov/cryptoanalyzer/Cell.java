@@ -1,9 +1,10 @@
 package ru.javarush.iliasov.cryptoanalyzer;
 
 import ru.javarush.iliasov.cryptoanalyzer.Organisms.Animal;
+import ru.javarush.iliasov.cryptoanalyzer.Organisms.AnimalType;
 import ru.javarush.iliasov.cryptoanalyzer.Organisms.Plants;
 
-import java.util.ArrayList;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -47,4 +48,8 @@ public class Cell {
     public boolean removePlant(Plants plant){
         return plantsList.remove(plant);
     }
+
+    public long getCurrentAnimalCount(AnimalType type){ return animalsList
+            .stream()
+            .filter(animal -> animal.getType().equals(type)).count();}
 }
