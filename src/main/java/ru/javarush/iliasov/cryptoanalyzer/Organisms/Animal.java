@@ -39,6 +39,10 @@ public class Animal {
         this.isAlive = isAlive;
     }
 
+    public boolean getAlive(){
+        return isAlive;
+    }
+
     public void eat(Animal prey){
         double foodConsumed = prey.getWeight();
         setWeight(getWeight() + foodConsumed);
