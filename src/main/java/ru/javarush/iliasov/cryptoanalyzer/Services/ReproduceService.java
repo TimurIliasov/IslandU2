@@ -44,8 +44,8 @@ public class ReproduceService {
         }
     }
 
-    public void reproducePercent(Animal animal, Cell cell) throws IOException {
-        int randomPercent = ThreadLocalRandom.current().nextInt(100 );
+    public void reproducePercent(Animal animal, Cell cell, RandomService randomService) throws IOException {
+        int randomPercent = randomService.randomNumber();
         if (randomPercent <= 49){
             return;
         }
