@@ -8,8 +8,6 @@ public class AnimalFactory {
     }
 
     public Animal create(AnimalType type){
-        Animal animal = new Animal(type, configLoader.getConfig(type));
-        animal.setAlive(true);
-        return animal;
+        return new Animal(type, configLoader.getConfig(type));
     }
 }

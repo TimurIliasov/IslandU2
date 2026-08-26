@@ -3,6 +3,7 @@ package ru.javarush.iliasov.cryptoanalyzer.Services;
 import ru.javarush.iliasov.cryptoanalyzer.Cell;
 import ru.javarush.iliasov.cryptoanalyzer.Island;
 import ru.javarush.iliasov.cryptoanalyzer.Organisms.*;
+import ru.javarush.iliasov.cryptoanalyzer.Organisms.Plants;
 
 import java.util.ArrayList;
 import java.util.List;

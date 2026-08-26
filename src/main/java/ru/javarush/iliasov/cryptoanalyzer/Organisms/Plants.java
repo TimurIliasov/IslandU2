@@ -2,7 +2,6 @@ package ru.javarush.iliasov.cryptoanalyzer.Organisms;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Plants {
@@ -11,6 +10,10 @@ public class Plants {
 
     public Plants(){
 
+    }
+
+    public double getWeight() {
+        return weight;
     }
 
     public List<Plants> plantsInCell(){

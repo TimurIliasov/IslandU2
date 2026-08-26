@@ -14,40 +14,44 @@ public class Animal {
 
     protected Animal(AnimalType type, AnimalConfig config) {
         this.config = config;
-        this.currentWeight = currentWeight;
-        this.isAlive = isAlive;
+        this.currentWeight = config.getStartWeight();
+        this.isAlive = true;
         this.type = type;
     }
 
-    public AnimalType getType(){
+    public AnimalType getType() {
         return type;
     }
 
-    public AnimalConfig getConfig(){
+    public AnimalConfig getConfig() {
         return config;
     }
 
-    public double getWeight(){
+    public double getWeight() {
         return currentWeight;
     }
 
-    public void setWeight(double currentWeight){
+    public void setWeight(double currentWeight) {
         this.currentWeight = currentWeight;
     }
 
-    public void setAlive(boolean isAlive){
+    public void setAlive(boolean isAlive) {
         this.isAlive = isAlive;
     }
 
-    public boolean getAlive(){
+    public boolean getAlive() {
         return isAlive;
     }
 
-    public void eat(Animal prey){
+    public void eat(Animal prey) {
         double foodConsumed = prey.getWeight();
         setWeight(getWeight() + foodConsumed);
         prey.setAlive(false);
     }
 
+    public void eatPlant(Plants plants) {
+        double foodConsumed = plants.getWeight();
+        setWeight(getWeight() + foodConsumed);
     }
+}
 

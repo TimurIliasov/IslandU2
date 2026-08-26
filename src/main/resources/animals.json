@@ -14,6 +14,18 @@
         "DEER": 15
       }
     },
+    "BOA": {
+      "speed": 1,
+      "foodNeeded": 3,
+      "maxInCell": 30,
+      "startWeight": 15,
+      "huntingProbability": {
+        "FOX": 15,
+        "RABBIT": 20,
+        "MOUSE": 40,
+        "DUCK": 10
+      }
+    },
     "FOX": {
       "speed": 2,
       "foodNeeded": 2,
@@ -24,13 +36,118 @@
         "MOUSE": 90
       }
     },
+    "BEAR": {
+      "speed": 2,
+      "foodNeeded": 80,
+      "maxInCell": 5,
+      "startWeight": 500,
+      "huntingProbability": {
+        "BOA": 80,
+        "HORSE": 40,
+        "DEER": 80,
+        "RABBIT": 80,
+        "MOUSE": 90,
+        "GOAT": 70,
+        "SHEEP": 70,
+        "HOG": 50,
+        "BUFFALO": 20,
+        "DUCK": 10
+      }
+    },
+    "EAGLE": {
+      "speed": 3,
+      "foodNeeded": 1,
+      "maxInCell": 20,
+      "startWeight": 6,
+      "huntingProbability": {
+        "FOX": 10,
+        "RABBIT": 90,
+        "MOUSE": 90,
+        "DUCK": 80
+      }
+    },
+    "HORSE": {
+      "speed": 4,
+      "foodNeeded": 60,
+      "maxInCell": 20,
+      "startWeight": 400,
+      "huntingProbability": {
+      }
+    },
+    "DEER": {
+      "speed": 4,
+      "foodNeeded": 50,
+      "maxInCell": 20,
+      "startWeight": 300,
+      "huntingProbability": {
+      }
+    },
     "RABBIT": {
       "speed": 2,
       "foodNeeded": 0.45,
       "maxInCell": 150,
       "startWeight": 2,
       "huntingProbability": {
-
+      }
+    },
+    "MOUSE": {
+      "speed": 1,
+      "foodNeeded": 0.01,
+      "maxInCell": 500,
+      "startWeight": 0.05,
+      "huntingProbability": {
+        "CATERPILLAR": 90
+      }
+    },
+    "GOAT": {
+      "speed": 3,
+      "foodNeeded": 10,
+      "maxInCell": 140,
+      "startWeight": 60,
+      "huntingProbability": {
+      }
+    },
+    "SHEEP": {
+      "speed": 3,
+      "foodNeeded": 15,
+      "maxInCell": 140,
+      "startWeight": 70,
+      "huntingProbability": {
+      }
+    },
+    "HOG": {
+      "speed": 2,
+      "foodNeeded": 50,
+      "maxInCell": 50,
+      "startWeight": 400,
+      "huntingProbability": {
+        "MOUSE": 50,
+        "CATERPILLAR": 90
+      }
+    },
+    "BUFFALO": {
+      "speed": 3,
+      "foodNeeded": 100,
+      "maxInCell": 10,
+      "startWeight": 700,
+      "huntingProbability": {
+      }
+    },
+    "DUCK": {
+      "speed": 4,
+      "foodNeeded": 0.15,
+      "maxInCell": 200,
+      "startWeight": 1,
+      "huntingProbability": {
+        "CATERPILLAR": 90
+      }
+    },
+    "CATERPILLAR": {
+      "speed": 0,
+      "foodNeeded": 0,
+      "maxInCell": 1000,
+      "startWeight": 0.01,
+      "huntingProbability": {
       }
     }
   }
