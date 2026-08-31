@@ -45,7 +45,7 @@ public class StatisticTest {
         island.getCells()[1][4].addAnimal(factory.create(AnimalType.RABBIT));
 
         StatisticsService service = new StatisticsService(island);
-        Map<AnimalType, Integer> animalTypeIntegerMap = service.getAnimalCount();
+        Map<AnimalType, Integer> animalTypeIntegerMap = service.countAnimalsByType();
         assertEquals(3, animalTypeIntegerMap.get(AnimalType.WOLF));
         assertEquals(2, animalTypeIntegerMap.get(AnimalType.RABBIT));
     }
@@ -60,7 +60,7 @@ public class StatisticTest {
         }
 
         StatisticsService service = new StatisticsService(island);
-        Map<AnimalType, Integer> animalTypeIntegerMap = service.getAnimalCount();
+        Map<AnimalType, Integer> animalTypeIntegerMap = service.countAnimalsByType();
         assertTrue(animalTypeIntegerMap.isEmpty());
     }
 

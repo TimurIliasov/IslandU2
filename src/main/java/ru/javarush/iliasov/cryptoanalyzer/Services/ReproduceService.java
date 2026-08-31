@@ -1,19 +1,24 @@
 package ru.javarush.iliasov.cryptoanalyzer.Services;
 
 import ru.javarush.iliasov.cryptoanalyzer.Cell;
+import ru.javarush.iliasov.cryptoanalyzer.Island;
 import ru.javarush.iliasov.cryptoanalyzer.Organisms.Animal;
 import ru.javarush.iliasov.cryptoanalyzer.Organisms.AnimalFactory;
 
-import java.io.IOException;
+
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.Set;
+
 
 public class ReproduceService {
     private final AnimalFactory factory;
+    private final Island island;
 
-    public ReproduceService(AnimalFactory factory) {
+    public ReproduceService(AnimalFactory factory, Island island) {
         this.factory = factory;
+        this.island = island;
     }
 
     public boolean hasSpaceInCell(Animal animal, Cell cell){
@@ -37,14 +42,30 @@ public class ReproduceService {
         return animalListPair;
     }
 
-    public void reproduce(Animal animal, Cell cell) throws IOException {
+    public void reproduce(Animal animal, Cell cell) {
         if (findPair(animal,cell).size() == 2){
             Animal child = factory.create(animal.getType());
             cell.addAnimal(child);
         }
     }
 
-    public void reproducePercent(Animal animal, Cell cell, RandomService randomService) throws IOException {
+    public void reproduceAll(){
+        for (Cell[] row: island.getCells()){
+            for (Cell cell: row){
+                Set<Animal> reproducedAnimals = new HashSet<>();
+                for (Animal animal: new ArrayList<>(cell.getAnimalsList())){
+                    List<Animal> pair = findPair(animal, cell);
+                    if (!reproducedAnimals.contains(animal) && pair.size() == 2) {
+                        reproduce(animal, cell);
+                        reproducedAnimals.add(pair.get(0));
+                        reproducedAnimals.add(pair.get(1));
+                    }
+                }
+            }
+        }
+    }
+
+    public void reproducePercent(Animal animal, Cell cell, RandomService randomService) {
         int randomPercent = randomService.randomNumber();
         if (randomPercent <= 49){
             return;

@@ -7,12 +7,11 @@ import ru.javarush.iliasov.cryptoanalyzer.Services.MovementService;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static java.lang.Character.getType;
 import static org.junit.jupiter.api.Assertions.*;
 import static ru.javarush.iliasov.cryptoanalyzer.Organisms.AnimalType.WOLF;
 
-public class MovementTest {
-    private Island island = new Island(new Cell[5][5]);
+class MovementTest {
+    private final Island island = new Island(new Cell[5][5]);
 
     @Test
     void testingMovementServiceReallyWorks() throws IOException {

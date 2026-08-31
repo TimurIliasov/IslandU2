@@ -13,7 +13,7 @@ public class StatisticsService {
         this.island = island;
     }
 
-    public Map<AnimalType, Integer> getAnimalCount() {
+    public Map<AnimalType, Integer> countAnimalsByType() {
         Map<AnimalType, Integer> animalTypeIntegerMap = new LinkedHashMap<>();
         for (Cell[] cells : island.getCells()) {
             for (Cell cell : cells) {
@@ -24,6 +24,7 @@ public class StatisticsService {
         }
         return animalTypeIntegerMap;
     }
+
 
     public int getPlantsCount(){
         int plantsCount = 0;
@@ -36,4 +37,5 @@ public class StatisticsService {
         }
         return plantsCount;
     }
+
 }

@@ -1,6 +1,5 @@
 package ru.javarush.iliasov.cryptoanalyzer.Services;
 
-import ru.javarush.iliasov.cryptoanalyzer.Organisms.Plants;
 
 import java.util.concurrent.ThreadLocalRandom;
 

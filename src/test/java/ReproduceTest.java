@@ -1,34 +1,43 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import ru.javarush.iliasov.cryptoanalyzer.Cell;
+import ru.javarush.iliasov.cryptoanalyzer.Island;
 import ru.javarush.iliasov.cryptoanalyzer.Organisms.Animal;
 import ru.javarush.iliasov.cryptoanalyzer.Organisms.AnimalFactory;
-import ru.javarush.iliasov.cryptoanalyzer.Organisms.AnimalType;
+
 import ru.javarush.iliasov.cryptoanalyzer.Organisms.ConfigLoader;
 import ru.javarush.iliasov.cryptoanalyzer.Services.RandomService;
 import ru.javarush.iliasov.cryptoanalyzer.Services.ReproduceService;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
+
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
 import static ru.javarush.iliasov.cryptoanalyzer.Organisms.AnimalType.WOLF;
 
-public class ReproduceTest {
+class ReproduceTest {
     AnimalFactory factory;
     Cell cell;
     ReproduceService reproduceService;
     Animal animal;
+    Island island;
 
     @BeforeEach
     void init() throws IOException {
+        island = new Island(new Cell[5][5]);
         factory  = new AnimalFactory(new ConfigLoader());
-        cell = new Cell(new ArrayList<>(), new ArrayList<>());
-        reproduceService = new ReproduceService(factory);
+        reproduceService = new ReproduceService(factory, island);
         animal = factory.create(WOLF);
+        for (int i = 0; i < island.getCells().length; i++) {
+            for (int j = 0; j < island.getCells()[i].length; j++) {
+                island.getCells()[i][j] = new Cell(new ArrayList<>(), new ArrayList<>());
+            }
+        }
+
+        cell = island.getCells()[2][2];
     }
 
     @Test
@@ -60,7 +69,7 @@ public class ReproduceTest {
     }
 
     @Test
-    void whenReproduceReturnsNewAnimal() throws IOException {
+    void whenReproduceReturnsNewAnimal() {
         long maxCount = animal.getConfig().getMaxInCell();
         for (int i = 0; i < maxCount - 1; i++) {
                 cell.addAnimal(factory.create(animal.getType()));
@@ -72,7 +81,7 @@ public class ReproduceTest {
     }
 
     @Test
-    void whenMaxInCellIsFull() throws IOException {
+    void whenMaxInCellIsFull(){
         for (int i = 0; i < animal.getConfig().getMaxInCell(); i++) {
             cell.addAnimal(factory.create(animal.getType()));
         }
@@ -83,7 +92,7 @@ public class ReproduceTest {
     }
 
     @Test
-    void whenNoPairFound() throws IOException {
+    void whenNoPairFound() {
         cell.addAnimal(factory.create(animal.getType()));
         long animalCount = cell.getCurrentAnimalCount(animal.getType());
         reproduceService.reproduce(animal,cell);
@@ -93,9 +102,9 @@ public class ReproduceTest {
 
 
     @Test
-    void whenPercentIs49AnimalShouldNotReproduce() throws IOException {
-        RandomService randomService = Mockito.mock(RandomService.class);
-        Mockito.when(randomService.randomNumber()).thenReturn(49);
+    void whenPercentIs49AnimalShouldNotReproduce() {
+        RandomService randomService = mock(RandomService.class);
+        when(randomService.randomNumber()).thenReturn(49);
         for (int i = 0; i < animal.getConfig().getMaxInCell() -1; i++) {
             cell.addAnimal(factory.create(animal.getType()));
         }
@@ -106,9 +115,9 @@ public class ReproduceTest {
     }
 
     @Test
-    void whenPercentIs50AnimalShouldReproduce() throws IOException {
-        RandomService randomService = Mockito.mock(RandomService.class);
-        Mockito.when(randomService.randomNumber()).thenReturn(50);
+    void whenPercentIs50AnimalShouldReproduce() {
+        RandomService randomService = mock(RandomService.class);
+        when(randomService.randomNumber()).thenReturn(50);
         for (int i = 0; i < animal.getConfig().getMaxInCell() - 1; i++) {
             cell.addAnimal(factory.create(animal.getType()));
         }
@@ -116,5 +125,15 @@ public class ReproduceTest {
         reproduceService.reproducePercent(animal, cell, randomService);
         long numberAfterReproduce = cell.getCurrentAnimalCount(animal.getType());
         assertEquals(currentAnimalNumber + 1, numberAfterReproduce);
+    }
+
+    @Test
+    void whenTwoAnimalsInCell_thenReproduceAllCreatesChild(){
+        cell.addAnimal(factory.create(animal.getType()));
+        cell.addAnimal(factory.create(animal.getType()));
+        long currentAnimalNumber = cell.getCurrentAnimalCount(animal.getType());
+        reproduceService.reproduceAll();
+        long numberAfterReproduceAll = cell.getCurrentAnimalCount(animal.getType());
+        assertEquals(currentAnimalNumber + 1, numberAfterReproduceAll);
     }
 }
