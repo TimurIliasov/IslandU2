@@ -29,7 +29,8 @@ public class SimulationService {
         simulationTask = executorService.scheduleAtFixedRate(this::simulateStep, 0, 300, TimeUnit.MILLISECONDS);
     }
 
-    private boolean isSimulationRunning() {
+
+    public boolean isSimulationRunning() {
         return simulationTask != null
                 && !simulationTask.isCancelled()
                 && !simulationTask.isDone();
