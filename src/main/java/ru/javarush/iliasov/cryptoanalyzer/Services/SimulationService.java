@@ -36,7 +36,7 @@ public class SimulationService {
                 && !simulationTask.isDone();
     }
 
-    private void simulateStep() {
+    public void simulateStep() {
         movementService.move();
         eatingService.eatAll(randomService);
         eatingService.eatAllPlants();
@@ -56,8 +56,9 @@ public class SimulationService {
         }
     }
 
-    private void getStatistics(){
+    public void getStatistics(){
         System.out.println(statisticsService.countAnimalsByType());
         System.out.println(statisticsService.getPlantsCount());
     }
+
 }

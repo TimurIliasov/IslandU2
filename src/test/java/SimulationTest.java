@@ -1,65 +1,87 @@
-import org.junit.jupiter.api.BeforeEach;
+
 import org.junit.jupiter.api.Test;
-import ru.javarush.iliasov.cryptoanalyzer.Cell;
-import ru.javarush.iliasov.cryptoanalyzer.Island;
-import ru.javarush.iliasov.cryptoanalyzer.Organisms.AnimalFactory;
-import ru.javarush.iliasov.cryptoanalyzer.Organisms.ConfigLoader;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 import ru.javarush.iliasov.cryptoanalyzer.Services.*;
 
-import java.io.IOException;
-import java.util.ArrayList;
+
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.verify;
 
-public class SimulationTest {
+@ExtendWith(MockitoExtension.class)
+class SimulationTest {
+    @Mock
     EatingService eatingService;
+
+    @Mock
     MovementService movementService;
+
+    @Mock
     ReproduceService reproduceService;
+
+    @Mock
     RandomService randomService;
+
+    @Mock
     StatisticsService statisticsService;
-    Island island;
-    AnimalFactory factory;
-    ConfigLoader configLoader;
-    Cell cell;
 
-    @BeforeEach
-    void init() throws IOException {
-        island = new Island(new Cell[5][5]);
-        configLoader = new ConfigLoader();
-        factory = new AnimalFactory(configLoader);
 
-        movementService = new MovementService(island);
-        eatingService = new EatingService(island);
-        reproduceService = new ReproduceService(factory, island);
-        randomService = new RandomService();
-        statisticsService = new StatisticsService(island);
 
-        for (int i = 0; i < island.getCells().length; i++) {
-            for (int j = 0; j < island.getCells()[i].length; j++) {
-                island.getCells()[i][j] = new Cell(new ArrayList<>(), new ArrayList<>());
-            }
-        }
-
-        island.getCells()[2][2] = cell;
-    }
     @Test
-    void whenSimulationStarted(){
-        SimulationService simulationService = new SimulationService(movementService, eatingService, reproduceService, statisticsService, randomService);
-
+    void shouldStartSimulation() {
+        SimulationService simulationService = createSimulationService();
         simulationService.startSimulation();
         assertTrue(simulationService.isSimulationRunning());
+        simulationService.stopSimulation();
+    }
 
+    @Test
+    void shouldNotStartSimulationTwice(){
+        SimulationService simulationService = createSimulationService();
+        simulationService.startSimulation();
         simulationService.startSimulation();
         assertTrue(simulationService.isSimulationRunning());
+        simulationService.stopSimulation();
 
+    }
+
+    private SimulationService createSimulationService() {
+        return new SimulationService(movementService, eatingService, reproduceService, statisticsService, randomService);
+    }
+
+    @Test
+    void shouldStopSimulation() {
+        SimulationService simulationService = createSimulationService();
+        simulationService.startSimulation();
+        assertTrue(simulationService.isSimulationRunning());
         simulationService.stopSimulation();
         assertFalse(simulationService.isSimulationRunning());
 
-        simulationService.startSimulation();
-        assertTrue(simulationService.isSimulationRunning());
+    }
 
-        simulationService.stopSimulation();
-        assertFalse(simulationService.isSimulationRunning());
+    @Test
+    void shouldRestartSimulationAfterStop(){
+        SimulationService service = createSimulationService();
+        service.startSimulation();
+        service.stopSimulation();
+        service.startSimulation();
+        assertTrue(service.isSimulationRunning());
+        service.stopSimulation();
+    }
+
+    @Test
+    void shouldExecuteAllSimulationServices()  {
+        SimulationService service = createSimulationService();
+        service.simulateStep();
+        verify(movementService).move();
+        verify(eatingService).eatAll(randomService);
+        verify(eatingService).eatAllPlants();
+        verify(reproduceService).reproduceAll();
+        verify(statisticsService).getPlantsCount();
+        verify(statisticsService).countAnimalsByType();
     }
 }
