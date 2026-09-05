@@ -1,8 +1,7 @@
-package ru.javarush.iliasov.cryptoanalyzer.Organisms;
+package ru.javarush.iliasov.islandproject.Organisms;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import ru.javarush.iliasov.cryptoanalyzer.Cell;
 
 
 import java.util.Map;

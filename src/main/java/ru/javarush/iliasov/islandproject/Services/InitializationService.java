@@ -1,9 +1,9 @@
-package ru.javarush.iliasov.cryptoanalyzer.Services;
+package ru.javarush.iliasov.islandproject.Services;
 
-import ru.javarush.iliasov.cryptoanalyzer.Cell;
-import ru.javarush.iliasov.cryptoanalyzer.Island;
-import ru.javarush.iliasov.cryptoanalyzer.Organisms.*;
-import ru.javarush.iliasov.cryptoanalyzer.Organisms.Plants;
+import ru.javarush.iliasov.islandproject.Cell;
+import ru.javarush.iliasov.islandproject.Island;
+import ru.javarush.iliasov.islandproject.Organisms.*;
+import ru.javarush.iliasov.islandproject.Organisms.Plants;
 
 import java.util.ArrayList;
 

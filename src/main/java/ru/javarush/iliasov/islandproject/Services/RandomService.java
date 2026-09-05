@@ -1,4 +1,4 @@
-package ru.javarush.iliasov.cryptoanalyzer.Services;
+package ru.javarush.iliasov.islandproject.Services;
 
 
 import java.util.concurrent.ThreadLocalRandom;

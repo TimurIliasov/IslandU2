@@ -1,22 +1,23 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.javarush.iliasov.cryptoanalyzer.Cell;
-import ru.javarush.iliasov.cryptoanalyzer.Island;
-import ru.javarush.iliasov.cryptoanalyzer.Organisms.Animal;
-import ru.javarush.iliasov.cryptoanalyzer.Organisms.AnimalFactory;
+import ru.javarush.iliasov.islandproject.Cell;
+import ru.javarush.iliasov.islandproject.Island;
+import ru.javarush.iliasov.islandproject.Organisms.Animal;
+import ru.javarush.iliasov.islandproject.Organisms.AnimalFactory;
 
-import ru.javarush.iliasov.cryptoanalyzer.Organisms.ConfigLoader;
-import ru.javarush.iliasov.cryptoanalyzer.Services.RandomService;
-import ru.javarush.iliasov.cryptoanalyzer.Services.ReproduceService;
+import ru.javarush.iliasov.islandproject.Organisms.ConfigLoader;
+import ru.javarush.iliasov.islandproject.Services.RandomService;
+import ru.javarush.iliasov.islandproject.Services.ReproduceService;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.mock;
-import static ru.javarush.iliasov.cryptoanalyzer.Organisms.AnimalType.WOLF;
+import static ru.javarush.iliasov.islandproject.Organisms.AnimalType.WOLF;
 
 class ReproduceTest {
     AnimalFactory factory;
@@ -24,6 +25,7 @@ class ReproduceTest {
     ReproduceService reproduceService;
     Animal animal;
     Island island;
+    List<Animal> pair;
 
     @BeforeEach
     void init() throws IOException {
@@ -31,6 +33,7 @@ class ReproduceTest {
         factory  = new AnimalFactory(new ConfigLoader());
         reproduceService = new ReproduceService(factory, island);
         animal = factory.create(WOLF);
+        pair = new ArrayList<>();
         for (int i = 0; i < island.getCells().length; i++) {
             for (int j = 0; j < island.getCells()[i].length; j++) {
                 island.getCells()[i][j] = new Cell(new ArrayList<>(), new ArrayList<>());
@@ -75,7 +78,7 @@ class ReproduceTest {
                 cell.addAnimal(factory.create(animal.getType()));
         }
         long animalCount = cell.getCurrentAnimalCount(animal.getType());
-        reproduceService.reproduce(animal, cell);
+        reproduceService.reproduce(animal, cell, pair);
         long animalCountAfterReproduce = cell.getCurrentAnimalCount(animal.getType());
         assertEquals(animalCount + 1, animalCountAfterReproduce);
     }
@@ -86,7 +89,7 @@ class ReproduceTest {
             cell.addAnimal(factory.create(animal.getType()));
         }
         long animalCount = cell.getCurrentAnimalCount(animal.getType());
-        reproduceService.reproduce(animal, cell);
+        reproduceService.reproduce(animal, cell, pair);
         long count = cell.getCurrentAnimalCount(animal.getType());
         assertEquals(animalCount , count);
     }
@@ -95,7 +98,7 @@ class ReproduceTest {
     void whenNoPairFound() {
         cell.addAnimal(factory.create(animal.getType()));
         long animalCount = cell.getCurrentAnimalCount(animal.getType());
-        reproduceService.reproduce(animal,cell);
+        reproduceService.reproduce(animal,cell, pair);
         long animalCountAfterReproduce = cell.getCurrentAnimalCount(animal.getType());
         assertEquals(animalCount, animalCountAfterReproduce);
     }

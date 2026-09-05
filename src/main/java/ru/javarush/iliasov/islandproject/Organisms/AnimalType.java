@@ -1,4 +1,4 @@
-package ru.javarush.iliasov.cryptoanalyzer.Organisms;
+package ru.javarush.iliasov.islandproject.Organisms;
 
 public enum AnimalType {
     BUFFALO, CATERPILLAR, DEER, DUCK, GOAT, HOG, HORSE, MOUSE, RABBIT, SHEEP,

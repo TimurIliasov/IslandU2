@@ -1,14 +1,14 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import ru.javarush.iliasov.cryptoanalyzer.Cell;
-import ru.javarush.iliasov.cryptoanalyzer.Island;
-import ru.javarush.iliasov.cryptoanalyzer.Organisms.AnimalFactory;
-import ru.javarush.iliasov.cryptoanalyzer.Organisms.AnimalType;
-import ru.javarush.iliasov.cryptoanalyzer.Organisms.ConfigLoader;
-import ru.javarush.iliasov.cryptoanalyzer.Services.InitializationService;
-import ru.javarush.iliasov.cryptoanalyzer.Services.RandomService;
-import ru.javarush.iliasov.cryptoanalyzer.Services.StatisticsService;
+import ru.javarush.iliasov.islandproject.Cell;
+import ru.javarush.iliasov.islandproject.Island;
+import ru.javarush.iliasov.islandproject.Organisms.AnimalFactory;
+import ru.javarush.iliasov.islandproject.Organisms.AnimalType;
+import ru.javarush.iliasov.islandproject.Organisms.ConfigLoader;
+import ru.javarush.iliasov.islandproject.Services.InitializationService;
+import ru.javarush.iliasov.islandproject.Services.RandomService;
+import ru.javarush.iliasov.islandproject.Services.StatisticsService;
 
 import java.io.IOException;
 import java.util.ArrayList;

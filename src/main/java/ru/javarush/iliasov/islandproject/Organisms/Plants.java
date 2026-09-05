@@ -1,10 +1,10 @@
-package ru.javarush.iliasov.cryptoanalyzer.Organisms;
+package ru.javarush.iliasov.islandproject.Organisms;
 
 public class Plants {
     private static final double weight = 1;
     private static final int MAX_IN_CELL = 200;
 
-    public Plants(){
+    public Plants() {
 
     }
 
@@ -12,12 +12,9 @@ public class Plants {
         return weight;
     }
 
-    public static int getMaxInCell(){
+    public static int getMaxInCell() {
         return MAX_IN_CELL;
     }
-
-
-
-    }
+}
 
 

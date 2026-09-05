@@ -1,4 +1,4 @@
-package ru.javarush.iliasov.cryptoanalyzer;
+package ru.javarush.iliasov.islandproject;
 
 public class Island {
     private final Cell[][] cells;

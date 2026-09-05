@@ -4,7 +4,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import ru.javarush.iliasov.cryptoanalyzer.Services.*;
+import ru.javarush.iliasov.islandproject.Island;
+import ru.javarush.iliasov.islandproject.Services.*;
 
 
 
@@ -29,6 +30,11 @@ class SimulationTest {
     @Mock
     StatisticsService statisticsService;
 
+    @Mock
+    InitializationService initializationService;
+
+    @Mock
+    Island island;
 
 
     @Test
@@ -50,7 +56,7 @@ class SimulationTest {
     }
 
     private SimulationService createSimulationService() {
-        return new SimulationService(movementService, eatingService, reproduceService, statisticsService, randomService);
+        return new SimulationService(initializationService, movementService, eatingService, reproduceService, statisticsService, randomService, island);
     }
 
     @Test

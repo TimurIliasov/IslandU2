@@ -1,10 +1,10 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.javarush.iliasov.cryptoanalyzer.Cell;
-import ru.javarush.iliasov.cryptoanalyzer.Island;
-import ru.javarush.iliasov.cryptoanalyzer.Organisms.*;
-import ru.javarush.iliasov.cryptoanalyzer.Services.EatingService;
-import ru.javarush.iliasov.cryptoanalyzer.Services.RandomService;
+import ru.javarush.iliasov.islandproject.Cell;
+import ru.javarush.iliasov.islandproject.Island;
+import ru.javarush.iliasov.islandproject.Organisms.*;
+import ru.javarush.iliasov.islandproject.Services.EatingService;
+import ru.javarush.iliasov.islandproject.Services.RandomService;
 
 import java.io.IOException;
 import java.util.ArrayList;

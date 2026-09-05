@@ -1,4 +1,4 @@
-package ru.javarush.iliasov.cryptoanalyzer.Organisms;
+package ru.javarush.iliasov.islandproject.Organisms;
 
 public class AnimalFactory {
     private final ConfigLoader configLoader;

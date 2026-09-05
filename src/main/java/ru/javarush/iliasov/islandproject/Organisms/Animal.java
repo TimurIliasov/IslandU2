@@ -1,9 +1,4 @@
-package ru.javarush.iliasov.cryptoanalyzer.Organisms;
-
-import ru.javarush.iliasov.cryptoanalyzer.Cell;
-import ru.javarush.iliasov.cryptoanalyzer.Island;
-
-import java.util.Objects;
+package ru.javarush.iliasov.islandproject.Organisms;
 
 public class Animal {
     private double currentWeight;

@@ -1,14 +1,14 @@
 import org.junit.jupiter.api.Test;
-import ru.javarush.iliasov.cryptoanalyzer.Cell;
-import ru.javarush.iliasov.cryptoanalyzer.Island;
-import ru.javarush.iliasov.cryptoanalyzer.Organisms.*;
-import ru.javarush.iliasov.cryptoanalyzer.Services.MovementService;
+import ru.javarush.iliasov.islandproject.Cell;
+import ru.javarush.iliasov.islandproject.Island;
+import ru.javarush.iliasov.islandproject.Organisms.*;
+import ru.javarush.iliasov.islandproject.Services.MovementService;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static ru.javarush.iliasov.cryptoanalyzer.Organisms.AnimalType.WOLF;
+import static ru.javarush.iliasov.islandproject.Organisms.AnimalType.WOLF;
 
 class MovementTest {
     private final Island island = new Island(new Cell[5][5]);
