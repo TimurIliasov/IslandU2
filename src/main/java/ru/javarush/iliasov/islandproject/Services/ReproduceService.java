@@ -95,10 +95,11 @@ public class ReproduceService {
         reproduce(animal, cell);
     }
 
-    public void shutdown(){
-        if (workers != null){
-            workers.
-        }
+    public void shutdown() throws InterruptedException {
         workers.shutdown();
+
+        if (workers.awaitTermination(5, TimeUnit.SECONDS)){
+            workers.shutdownNow();
+        }
     }
 }

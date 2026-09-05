@@ -64,7 +64,9 @@ public class SimulationService {
             executorService.shutdownNow();
             executorService = null;
         }
+    }
 
+    public void shutdownReproduceService() throws InterruptedException {
         reproduceService.shutdown();
     }
 
