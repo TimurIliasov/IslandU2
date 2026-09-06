@@ -95,11 +95,16 @@ public class ReproduceService {
         reproduce(animal, cell);
     }
 
-    public void shutdown() throws InterruptedException {
+    public void shutdown() {
         workers.shutdown();
 
-        if (workers.awaitTermination(5, TimeUnit.SECONDS)){
-            workers.shutdownNow();
+        try {
+            if (!workers.awaitTermination(5, TimeUnit.SECONDS)){
+                workers.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException(e);
         }
     }
 }

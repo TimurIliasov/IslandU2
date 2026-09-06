@@ -66,7 +66,8 @@ public class SimulationService {
         }
     }
 
-    public void shutdownReproduceService() throws InterruptedException {
+    public void shutdownReproduceService() {
+        movementService.shutdown();
         reproduceService.shutdown();
     }
 
@@ -103,7 +104,7 @@ public class SimulationService {
     }
 
     public void animalLifeCycle(){
-        movementService.move();
+        movementService.moveAll();
         eatingService.eatAll(randomService);
         eatingService.eatAllPlants();
         reproduceService.reproduceAll();

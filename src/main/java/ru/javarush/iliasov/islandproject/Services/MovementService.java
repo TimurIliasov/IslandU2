@@ -4,35 +4,19 @@ import ru.javarush.iliasov.islandproject.Cell;
 import ru.javarush.iliasov.islandproject.Island;
 import ru.javarush.iliasov.islandproject.Organisms.Animal;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.*;
 
 public class MovementService {
     private final Island island;
+
+    private final ExecutorService workers = Executors.newFixedThreadPool(4);
 
     public MovementService(Island island) {
         this.island = island;
     }
 
-
-    public void move() {
-        Map<Animal, Movement> movementMap = new HashMap<>();
-        for (int i = 0; i < island.getCells().length; i++) {
-            for (int j = 0; j < island.getCells()[i].length; j++) {
-                Cell cell = island.getCells()[i][j];
-                for (Animal animal : cell.getAnimalsList()) {
-                    movementMap.put(animal, createMovement(animal, i, j));
-                }
-
-            }
-        }
-        for (Map.Entry<Animal, Movement> entry : movementMap.entrySet()) {
-            Movement movement = entry.getValue();
-            movement.oldCell().removeAnimal(entry.getKey());
-            movement.newCell().addAnimal(entry.getKey());
-        }
-    }
 
     private Movement createMovement(Animal animal, int i, int j) {
         int distance = ThreadLocalRandom.current().nextInt(1, animal.getConfig().getSpeed() + 1);
@@ -56,10 +40,63 @@ public class MovementService {
             newJ = j;
         }
 
-        return new Movement(
+        return new Movement(animal,
                 island.getCells()[i][j],
                 island.getCells()[newI][newJ]
         );
+    }
+
+    public void moveAll() {
+        List<Future<List<Movement>>> futures = new ArrayList<>();
+        List<Movement> movements = new ArrayList<>();
+        for (int i = 0; i < island.getCells().length; i++) {
+            final int rowIndex = i;
+            for (int j = 0; j < island.getCells()[i].length; j++) {
+                final int columnIndex = j;
+                Cell cell = island.getCells()[i][j];
+                Callable<List<Movement>> callable = () -> moveInCell(cell, rowIndex, columnIndex);
+                futures.add(workers.submit(callable));
+            }
+        }
+        for (Future<List<Movement>> future: futures){
+            try {
+                movements.addAll(future.get());
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new RuntimeException(e);
+            } catch (ExecutionException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        for (Movement movement: movements){
+            movement.oldCell().removeAnimal(movement.animal());
+            movement.newCell().addAnimal(movement.animal());
+        }
+    }
+
+    public List<Movement> moveInCell(Cell cell, int i, int j) {
+        List<Movement> movementsList = new ArrayList<>();
+
+
+        for (Animal animal : cell.getAnimalsList()) {
+            movementsList.add(createMovement(animal, i, j));
+        }
+
+
+        return movementsList;
+    }
+
+    public void shutdown(){
+        workers.shutdown();
+        try {
+            if (!workers.awaitTermination(5, TimeUnit.SECONDS)){
+                workers.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException(e);
+        }
     }
 }
 
