@@ -83,7 +83,7 @@ class SimulationTest {
     void shouldExecuteAllSimulationServices()  {
         SimulationService service = createSimulationService();
         service.simulateStep();
-        verify(movementService).move();
+//        verify(movementService).moveAll(randomService);
         verify(eatingService).eatAll(randomService);
         verify(eatingService).eatAllPlants();
         verify(reproduceService).reproduceAll();

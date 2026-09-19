@@ -16,12 +16,14 @@ import java.util.concurrent.*;
 public class ReproduceService {
     private final AnimalFactory factory;
     private final Island island;
+    private final RandomService randomService;
 
     private final ExecutorService workers = Executors.newFixedThreadPool(4);
 
-    public ReproduceService(AnimalFactory factory, Island island) {
+    public ReproduceService(AnimalFactory factory, Island island, RandomService randomService) {
         this.factory = factory;
         this.island = island;
+        this.randomService = randomService;
     }
 
     public boolean hasSpaceInCell(Animal animal, Cell cell) {
@@ -47,8 +49,8 @@ public class ReproduceService {
     }
 
     public void reproduce(Animal animal, Cell cell) {
-            Animal child = factory.create(animal.getType());
-            cell.addAnimal(child);
+        Animal child = factory.create(animal.getType());
+        cell.addAnimal(child);
     }
 
     public void reproduceAll() {
@@ -77,7 +79,10 @@ public class ReproduceService {
             Set<Animal> reproducedAnimals = new HashSet<>();
             for (Animal animal : cell.getAnimalsList()) {
                 List<Animal> pair = findPair(animal, cell);
-                if (!reproducedAnimals.contains(animal) && pair.size() == 2) {
+                if (pair.size() == 2
+                        && !reproducedAnimals.contains(pair.get(1))
+                        && !reproducedAnimals.contains(pair.get(0))
+                        && reproducePercent()) {
                     reproduce(animal, cell);
                     reproducedAnimals.add(pair.get(0));
                     reproducedAnimals.add(pair.get(1));
@@ -87,24 +92,24 @@ public class ReproduceService {
     }
 
 
-    public void reproducePercent(Animal animal, Cell cell, RandomService randomService) {
-        int randomPercent = randomService.randomNumber();
-        if (randomPercent <= 49) {
-            return;
-        }
-        reproduce(animal, cell);
+    public boolean reproducePercent() {
+        return randomService.randomNumber() < 50;
     }
 
     public void shutdown() {
         workers.shutdown();
 
         try {
-            if (!workers.awaitTermination(5, TimeUnit.SECONDS)){
+            if (!workers.awaitTermination(5, TimeUnit.SECONDS)) {
                 workers.shutdownNow();
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new RuntimeException(e);
         }
+    }
+
+    public boolean isShutdown(){
+        return workers.isShutdown();
     }
 }

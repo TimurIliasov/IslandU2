@@ -104,7 +104,7 @@ public class SimulationService {
     }
 
     public void animalLifeCycle(){
-        movementService.moveAll();
+        movementService.moveAll(randomService);
         eatingService.eatAll(randomService);
         eatingService.eatAllPlants();
         reproduceService.reproduceAll();

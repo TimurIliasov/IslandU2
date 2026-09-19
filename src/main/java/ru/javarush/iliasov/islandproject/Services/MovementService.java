@@ -18,10 +18,9 @@ public class MovementService {
     }
 
 
-    private Movement createMovement(Animal animal, int i, int j) {
-        int distance = ThreadLocalRandom.current().nextInt(1, animal.getConfig().getSpeed() + 1);
-        int direction = ThreadLocalRandom.current().nextInt(0, 4);
-
+    public Movement createMovement(Animal animal, int i, int j, RandomService randomService) {
+        int distance = randomService.getRandomNumber(animal.getConfig().getSpeed());
+        int direction = randomService.getRandomNumber(3);
         int newI = i;
         int newJ = j;
 
@@ -46,7 +45,7 @@ public class MovementService {
         );
     }
 
-    public void moveAll() {
+    public void moveAll(RandomService randomService) {
         List<Future<List<Movement>>> futures = new ArrayList<>();
         List<Movement> movements = new ArrayList<>();
         for (int i = 0; i < island.getCells().length; i++) {
@@ -54,11 +53,11 @@ public class MovementService {
             for (int j = 0; j < island.getCells()[i].length; j++) {
                 final int columnIndex = j;
                 Cell cell = island.getCells()[i][j];
-                Callable<List<Movement>> callable = () -> moveInCell(cell, rowIndex, columnIndex);
+                Callable<List<Movement>> callable = () -> moveInCell(cell, rowIndex, columnIndex, randomService);
                 futures.add(workers.submit(callable));
             }
         }
-        for (Future<List<Movement>> future: futures){
+        for (Future<List<Movement>> future : futures) {
             try {
                 movements.addAll(future.get());
             } catch (InterruptedException e) {
@@ -69,28 +68,26 @@ public class MovementService {
             }
         }
 
-        for (Movement movement: movements){
+        for (Movement movement : movements) {
             movement.oldCell().removeAnimal(movement.animal());
             movement.newCell().addAnimal(movement.animal());
         }
     }
 
-    public List<Movement> moveInCell(Cell cell, int i, int j) {
+    public List<Movement> moveInCell(Cell cell, int i, int j, RandomService randomService) {
         List<Movement> movementsList = new ArrayList<>();
 
-
         for (Animal animal : cell.getAnimalsList()) {
-            movementsList.add(createMovement(animal, i, j));
+            movementsList.add(createMovement(animal, i, j, randomService));
         }
-
 
         return movementsList;
     }
 
-    public void shutdown(){
+    public void shutdown() {
         workers.shutdown();
         try {
-            if (!workers.awaitTermination(5, TimeUnit.SECONDS)){
+            if (!workers.awaitTermination(5, TimeUnit.SECONDS)) {
                 workers.shutdownNow();
             }
         } catch (InterruptedException e) {
@@ -98,6 +95,12 @@ public class MovementService {
             throw new RuntimeException(e);
         }
     }
+
+    public boolean isShutdown(){
+        return workers.isShutdown();
+    }
+
+
 }
 
 
