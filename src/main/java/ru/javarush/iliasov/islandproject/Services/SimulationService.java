@@ -49,9 +49,9 @@ public class SimulationService {
     }
 
     public void simulateStep() {
-       growPlants();
-       animalLifeCycle();
-       getStatistics();
+        growPlants();
+        animalLifeCycle();
+        getStatistics();
     }
 
     public void stopSimulation() {
@@ -68,6 +68,7 @@ public class SimulationService {
 
     public void shutdownReproduceService() {
         movementService.shutdown();
+        eatingService.shutdown();
         reproduceService.shutdown();
     }
 
@@ -83,18 +84,18 @@ public class SimulationService {
     public void growPlants(Cell cell) {
         int plantCount = cell.getCurrentPlantsCount();
         int numberLeftToMax = Plants.getMaxInCell() - plantCount;
-        if (plantCount >= Plants.getMaxInCell()){
+        if (plantCount >= Plants.getMaxInCell()) {
             return;
         }
         int random = ThreadLocalRandom.current().nextInt(numberLeftToMax + 1);
-        
+
         for (int i = 0; i < random; i++) {
             Plants plants = new Plants();
             cell.addPlant(plants);
         }
     }
 
-    public void growPlants(){
+    public void growPlants() {
         for (int i = 0; i < island.getCells().length; i++) {
             for (int j = 0; j < island.getCells()[i].length; j++) {
                 Cell cell = island.getCells()[i][j];
@@ -103,10 +104,9 @@ public class SimulationService {
         }
     }
 
-    public void animalLifeCycle(){
+    public void animalLifeCycle() {
         movementService.moveAll(randomService);
-        eatingService.eatAll(randomService);
-        eatingService.eatAllPlants();
+        eatingService.eatAllCells(randomService);
         reproduceService.reproduceAll();
     }
 

@@ -84,8 +84,7 @@ class SimulationTest {
         SimulationService service = createSimulationService();
         service.simulateStep();
 //        verify(movementService).moveAll(randomService);
-        verify(eatingService).eatAll(randomService);
-        verify(eatingService).eatAllPlants();
+        verify(eatingService).eatAllCells(randomService);
         verify(reproduceService).reproduceAll();
         verify(statisticsService).getPlantsCount();
         verify(statisticsService).countAnimalsByType();

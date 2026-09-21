@@ -2,7 +2,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import static org.mockito.Mockito.spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.javarush.iliasov.islandproject.Cell;
 import ru.javarush.iliasov.islandproject.Island;
@@ -17,8 +16,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.*;
 import static ru.javarush.iliasov.islandproject.Organisms.AnimalType.WOLF;
 
 @ExtendWith(MockitoExtension.class)
@@ -50,7 +48,7 @@ class MovementTest {
     }
 
     @AfterEach
-    void teardown() {
+    void tearDown() {
         movementService.shutdown();
     }
 
@@ -158,5 +156,16 @@ class MovementTest {
         assertTrue(cell1.getAnimalsList().isEmpty());
         assertTrue(cell2.getAnimalsList().contains(animal));
 
+    }
+
+    @Test
+    void whenMoveAllThrows(){
+        Cell fallingCell = mock(Cell.class);
+
+        when(fallingCell.getAnimalsList()).thenThrow(new RuntimeException("Test exception"));
+
+        island.getCells()[0][0] = fallingCell;
+
+        assertThrows(RuntimeException.class, () -> movementService.moveAll(randomService));
     }
 }

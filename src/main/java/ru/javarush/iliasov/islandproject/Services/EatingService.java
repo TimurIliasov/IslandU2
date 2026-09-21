@@ -8,10 +8,13 @@ import ru.javarush.iliasov.islandproject.Organisms.Plants;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.*;
 
 public class EatingService {
     private final Island island;
     private final DeathService deathService = new DeathService();
+
+    private final ExecutorService workers = Executors.newFixedThreadPool(4);
 
     public EatingService(Island island) {
         this.island = island;
@@ -23,14 +26,6 @@ public class EatingService {
         return randomChance < probability;
     }
 
-    public void eatAll(RandomService randomService) {
-        for (Cell[] row : island.getCells()) {
-            for (Cell cell : row) {
-                eatInCell(cell, randomService);
-                removeDeadAnimals(cell);
-            }
-        }
-    }
 
     private void eatInCell(Cell cell, RandomService randomService) {
         List<Animal> animals = cell.getAnimalsList();
@@ -62,23 +57,60 @@ public class EatingService {
         cell.removePlant(plant);
     }
 
-    public void eatAllPlants() {
-        for (Cell[] row : island.getCells()) {
-            for (Cell cell : row) {
-                plantsInCell(cell);
-            }
-        }
-    }
-
     private void plantsInCell(Cell cell) {
         List<Plants> plantsList = new ArrayList<>(cell.getPlantsList());
         for (Animal animal : new ArrayList<>(cell.getAnimalsList())) {
             Iterator<Plants> plantsIterator = plantsList.iterator();
-            while (plantsIterator.hasNext() && animal.getWeight() < animal.getConfig().getFoodNeeded()) {
+
+            double foodEaten = 0;
+
+            while (plantsIterator.hasNext() && foodEaten < animal.getConfig().getFoodNeeded()) {
                 Plants plant = plantsIterator.next();
+
                 eatPlant(animal, plant, cell);
+
+                foodEaten += plant.getWeight();
+
                 plantsIterator.remove();
             }
+        }
+    }
+
+    public void eatAllCells(RandomService randomService) {
+        List<Future<?>> futures = new ArrayList<>();
+
+        for (Cell[] row : island.getCells()) {
+            for (Cell cell : row) {
+                futures.add(workers.submit(() -> {
+                    eatInCell(cell, randomService);
+                    plantsInCell(cell);
+                    removeDeadAnimals(cell);
+                }));
+            }
+        }
+
+        for (Future<?> future : futures) {
+            try {
+                future.get();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new RuntimeException(e);
+            } catch (ExecutionException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public void shutdown(){
+        workers.shutdown();
+
+        try {
+            if (!workers.awaitTermination(5, TimeUnit.SECONDS)){
+                workers.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException(e);
         }
     }
 }

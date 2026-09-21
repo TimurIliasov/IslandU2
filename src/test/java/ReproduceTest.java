@@ -252,4 +252,15 @@ class ReproduceTest {
         assertEquals(deerCount + 1, deerCountAfterReproduce);
         assertEquals(duckCount + 1, duckCountAfterReproduce);
     }
+
+    @Test
+    void whenReproduceAllThrows(){
+        Cell failingCell = mock(Cell.class);
+
+        when(failingCell.getAnimalsList()).thenThrow(new RuntimeException("Test exception"));
+
+        island.getCells()[0][0] = failingCell;
+
+        assertThrows(RuntimeException.class, () -> reproduceService.reproduceAll());
+    }
 }
