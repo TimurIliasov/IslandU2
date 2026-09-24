@@ -124,11 +124,11 @@ class MovementTest {
         }
 
         movementService.moveAll(randomService);
-        Set<Animal> animalSet1 = new HashSet<>();
+        Set<Animal> animalsAfterMove = new HashSet<>();
         for (Cell[] row : island.getCells()) {
             for (Cell column : row) {
                 for (Animal animal1 : column.getAnimalsList()) {
-                    animalSet1.add(animal1);
+                    animalsAfterMove.add(animal1);
                 }
             }
         }
@@ -140,8 +140,8 @@ class MovementTest {
             }
         }
 
-        assertEquals(animalSet, animalSet1);
-        assertEquals(animalSet1.size(), count);
+        assertEquals(animalSet, animalsAfterMove);
+        assertEquals(animalsAfterMove.size(), count);
 
     }
 
@@ -168,4 +168,39 @@ class MovementTest {
 
         assertThrows(RuntimeException.class, () -> movementService.moveAll(randomService));
     }
+
+    @Test
+    void whenOneAnimalMoves_itExistsInExactlyOneCell(){
+        Animal wolf = factory.create(WOLF);
+        cell.addAnimal(wolf);
+        movementService.moveAll(randomService);
+
+        int count = 0;
+        for (Cell[] row: island.getCells()){
+            for (Cell currentCell: row){
+                if (currentCell.getAnimalsList().contains(wolf)){
+                    count++;
+                }
+            }
+        }
+
+
+
+        assertEquals(1, count);
+    }
+
+    @Test
+    void whenOneAnimalMakesOneMovement(){
+        Animal wolf = factory.create(WOLF);
+        cell.addAnimal(wolf);
+        Movement movement1 = new Movement(animal, cell, island.getCells()[2][3]);
+
+        doReturn(movement1).when(movementService).createMovement(eq(wolf), anyInt(), anyInt(), eq(randomService));
+
+        movementService.moveAll(randomService);
+
+        verify(movementService, times(1)).createMovement(eq(wolf), anyInt(), anyInt(), eq(randomService));
+
+    }
+
 }

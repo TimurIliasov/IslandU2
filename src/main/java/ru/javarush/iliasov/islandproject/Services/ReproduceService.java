@@ -18,7 +18,7 @@ public class ReproduceService {
     private final Island island;
     private final RandomService randomService;
 
-    private final ExecutorService workers = Executors.newFixedThreadPool(4);
+    private final ExecutorService workers = Executors.newFixedThreadPool(10);
 
     public ReproduceService(AnimalFactory factory, Island island, RandomService randomService) {
         this.factory = factory;
