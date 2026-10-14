@@ -17,6 +17,11 @@ public class MovementService {
         this.island = island;
     }
 
+    public boolean movementAllowed(Cell cell, Animal animal){
+        long currentAnimalCount = cell.getCurrentAnimalCount(animal.getType());
+        return currentAnimalCount < animal.getConfig().getMaxInCell();
+    }
+
 
     public Movement createMovement(Animal animal, int i, int j, RandomService randomService) {
         int distance = randomService.getRandomNumber(animal.getConfig().getSpeed());
@@ -35,6 +40,12 @@ public class MovementService {
                 || newI >= island.getCells().length
                 || newJ < 0
                 || newJ >= island.getCells()[i].length) {
+            newI = i;
+            newJ = j;
+        }
+
+        Cell targetCell = island.getCells()[newI][newJ];
+        if (!movementAllowed(targetCell, animal)){
             newI = i;
             newJ = j;
         }
@@ -69,6 +80,9 @@ public class MovementService {
         }
 
         for (Movement movement : movements) {
+            if (movement.newCell().getCurrentAnimalCount(movement.animal().getType()) >= movement.animal().getConfig().getMaxInCell()){
+                continue;
+            }
             movement.oldCell().removeAnimal(movement.animal());
             movement.newCell().addAnimal(movement.animal());
         }

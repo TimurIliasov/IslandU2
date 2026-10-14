@@ -73,8 +73,9 @@ public class SimulationService {
     }
 
     public void getStatistics() {
-        System.out.println(statisticsService.countAnimalsByType());
-        System.out.println(statisticsService.getPlantsCount());
+        System.out.print("Animals in island: " + statisticsService.countAnimalsByType());
+        System.out.println(" Plants in island: " + statisticsService.getPlantsCount());
+        System.out.println();
     }
 
     public void startIsland() {
@@ -105,9 +106,9 @@ public class SimulationService {
     }
 
     public void animalLifeCycle() {
+        reproduceService.reproduceAll();
         movementService.moveAll(randomService);
         eatingService.eatAllCells(randomService);
-        reproduceService.reproduceAll();
     }
 
 }

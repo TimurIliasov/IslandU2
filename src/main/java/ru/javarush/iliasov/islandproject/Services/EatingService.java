@@ -5,9 +5,7 @@ import ru.javarush.iliasov.islandproject.Island;
 import ru.javarush.iliasov.islandproject.Organisms.Animal;
 import ru.javarush.iliasov.islandproject.Organisms.Plants;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.*;
 
 public class EatingService {
@@ -27,13 +25,42 @@ public class EatingService {
     }
 
 
-    private void eatInCell(Cell cell, RandomService randomService) {
+    private Map<Animal, Double> eatInCell(Cell cell, RandomService randomService) {
         List<Animal> animals = cell.getAnimalsList();
+        Map<Animal, Double> foodEaten = new LinkedHashMap<>();
         for (Animal hunter : animals) {
+            double animalFood = 0;
             for (Animal prey : animals) {
-                if (canEat(hunter, prey) && canEatByProbability(prey, hunter, randomService)) {
+                if (canEat(hunter, prey)
+                        && canEatByProbability(prey, hunter, randomService)) {
+                    double preyWeight = prey.getWeight();
                     hunter.eat(prey);
+                    animalFood += preyWeight;
+
+                    break;
                 }
+            }
+            foodEaten.put(hunter, animalFood);
+
+        }
+
+        return foodEaten;
+    }
+
+    public void hunger(Cell cell, RandomService randomService){
+        Map<Animal, Double> plantMap = new LinkedHashMap<>(plantsInCell(cell));
+        Map<Animal, Double> animalDoubleMap = new LinkedHashMap<>(eatInCell(cell, randomService));
+
+
+        Map<Animal, Double> totalFoodConsumed = new LinkedHashMap<>(animalDoubleMap);
+        plantMap.forEach(((animal, food) ->
+                totalFoodConsumed.merge(animal, food, Double::sum)));
+
+        for (Animal animal: cell.getAnimalsList()){
+            double totalFood = totalFoodConsumed.getOrDefault(animal, 0.0);
+
+            if (totalFood < animal.getConfig().getFoodNeeded()/8){
+                animal.setAlive(false);
             }
         }
     }
@@ -42,6 +69,10 @@ public class EatingService {
         return hunter != prey
                 && hunter.getAlive()
                 && prey.getAlive();
+    }
+
+    private boolean canEatPlants(Animal animal){
+        return animal.getConfig().getPlantConsume() > 0;
     }
 
     private void removeDeadAnimals(Cell cell) {
@@ -57,24 +88,31 @@ public class EatingService {
         cell.removePlant(plant);
     }
 
-    private void plantsInCell(Cell cell) {
+    private Map<Animal, Double> plantsInCell(Cell cell) {
         List<Plants> plantsList = new ArrayList<>(cell.getPlantsList());
+        Map<Animal, Double> foodEaten = new LinkedHashMap<>();
         for (Animal animal : new ArrayList<>(cell.getAnimalsList())) {
+            if (!canEatPlants(animal) || !animal.getAlive()){
+                continue;
+            }
             Iterator<Plants> plantsIterator = plantsList.iterator();
 
-            double foodEaten = 0;
+            double foodConsumed = 0;
 
-            while (plantsIterator.hasNext() && foodEaten < animal.getConfig().getFoodNeeded()) {
-                Plants plant = plantsIterator.next();
+            while (plantsIterator.hasNext() && foodConsumed < animal.getConfig().getFoodNeeded()) {
+                    Plants plant = plantsIterator.next();
 
-                eatPlant(animal, plant, cell);
+                    eatPlant(animal, plant, cell);
 
-                foodEaten += plant.getWeight();
+                    foodConsumed += plant.getWeight();
 
-                plantsIterator.remove();
+                    plantsIterator.remove();
             }
+            foodEaten.put(animal, foodConsumed);
         }
+        return foodEaten;
     }
+
 
     public void eatAllCells(RandomService randomService) {
         List<Future<?>> futures = new ArrayList<>();
@@ -82,12 +120,12 @@ public class EatingService {
         for (Cell[] row : island.getCells()) {
             for (Cell cell : row) {
                 futures.add(workers.submit(() -> {
-                    eatInCell(cell, randomService);
-                    plantsInCell(cell);
+                    hunger(cell, randomService);
                     removeDeadAnimals(cell);
                 }));
             }
         }
+
 
         for (Future<?> future : futures) {
             try {

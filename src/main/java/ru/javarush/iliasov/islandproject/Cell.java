@@ -5,9 +5,7 @@ import ru.javarush.iliasov.islandproject.Organisms.AnimalType;
 import ru.javarush.iliasov.islandproject.Organisms.Plants;
 
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class Cell {
     private final List<Animal> animalsList;
@@ -65,5 +63,33 @@ public class Cell {
         synchronized (plantsList) {
             return plantsList.size();
         }
+    }
+
+    @Override
+    public String toString() {
+        List<Animal> animals = new ArrayList<>();
+        animals.addAll(animalsList);
+        Map<AnimalType, Long> animalCounts = new LinkedHashMap<>();
+        long animalCount = 0;
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (Animal animal: animals){
+            animalCount = getCurrentAnimalCount(animal.getType());
+            animalCounts.put(animal.getType(), animalCount);
+        }
+
+        for (Map.Entry<AnimalType, Long> map: animalCounts.entrySet()){
+            stringBuilder.append("| ");
+            stringBuilder.append(map.getKey());
+            stringBuilder.append(": ");
+            stringBuilder.append(map.getValue());
+        }
+
+        long plantCount = getCurrentPlantsCount();
+
+        stringBuilder.append("| Plants: ");
+        stringBuilder.append(plantCount);
+        stringBuilder.append(" |");
+        return stringBuilder.toString();
     }
 }

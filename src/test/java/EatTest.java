@@ -241,5 +241,35 @@ class EatTest {
 
         assertThrows(RuntimeException.class, () -> eatingService.eatAllCells(randomService));
     }
+
+    @Test
+    void whenHunterEatsInOneTickOnlyOneTime(){
+        Animal wolf = factory.create(AnimalType.WOLF);
+
+        cell.addAnimal(wolf);
+        cell.addAnimal(factory.create(AnimalType.RABBIT));
+        cell.addAnimal(factory.create(AnimalType.RABBIT));
+        cell.addPlant(new Plants());
+        cell.addPlant(new Plants());
+
+        long wolfCount = cell.getCurrentAnimalCount(AnimalType.WOLF);
+        double wolfWeight = wolf.getWeight();
+        long rabbitCount = cell.getCurrentAnimalCount(AnimalType.RABBIT);
+        System.out.println(wolfWeight);
+        System.out.println("Wolf: " + wolfCount + " Rabbit: " + rabbitCount);
+
+        when(randomService.randomNumber()).thenReturn(24);
+
+        eatingService.eatAllCells(randomService);
+
+        long wolfCountAfterHunt = cell.getCurrentAnimalCount(AnimalType.WOLF);
+        double wolfWeightAfterHunt = wolf.getWeight();
+        long rabbitCountAfterHunt = cell.getCurrentAnimalCount(AnimalType.RABBIT);
+        System.out.println(wolfWeightAfterHunt);
+        System.out.println("WolfAfter: " + wolfCountAfterHunt + " RabbitAfter: " + rabbitCountAfterHunt);
+
+        assertEquals(rabbitCount - 1, rabbitCountAfterHunt);
+        assertEquals(wolfCount, wolfCountAfterHunt);
+    }
 }
 

@@ -41,7 +41,7 @@ class ReproduceTest {
         factory = new AnimalFactory(new ConfigLoader());
         randomService = Mockito.mock(RandomService.class);
         reproduceService = new ReproduceService(factory, island, randomService);
-        animal = this.animal;
+        animal = factory.create(WOLF);
         pair = new ArrayList<>();
         for (int i = 0; i < island.getCells().length; i++) {
             for (int j = 0; j < island.getCells()[i].length; j++) {
@@ -107,7 +107,7 @@ class ReproduceTest {
             cell.addAnimal(factory.create(animal.getType()));
         }
         long animalCount = cell.getCurrentAnimalCount(animal.getType());
-        reproduceService.reproduce(animal, cell);
+        reproduceService.reproduceAll();
         long count = cell.getCurrentAnimalCount(animal.getType());
         assertEquals(animalCount, count);
     }
@@ -164,8 +164,10 @@ class ReproduceTest {
             cell.addAnimal(factory.create(animal.getType()));
         }
         long animalCount = cell.getCurrentAnimalCount(animal.getType());
+        System.out.println(animalCount);
         reproduceService.reproduceAll();
         long animalCountAfterReproduce = cell.getCurrentAnimalCount(animal.getType());
+        System.out.println(animalCountAfterReproduce);
         assertEquals(animalCount + 1, animalCountAfterReproduce);
     }
 

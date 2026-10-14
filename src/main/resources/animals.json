@@ -5,6 +5,7 @@
       "foodNeeded": 8,
       "maxInCell": 30,
       "startWeight": 50,
+      "plantConsume": 0,
       "huntingProbability": {
         "RABBIT": 60,
         "MOUSE": 80,
@@ -19,6 +20,7 @@
       "foodNeeded": 3,
       "maxInCell": 30,
       "startWeight": 15,
+      "plantConsume": 0,
       "huntingProbability": {
         "FOX": 15,
         "RABBIT": 20,
@@ -31,6 +33,7 @@
       "foodNeeded": 2,
       "maxInCell": 30,
       "startWeight": 8,
+      "plantConsume": 0,
       "huntingProbability": {
         "RABBIT": 70,
         "MOUSE": 90
@@ -41,6 +44,7 @@
       "foodNeeded": 80,
       "maxInCell": 5,
       "startWeight": 500,
+      "plantConsume": 0,
       "huntingProbability": {
         "BOA": 80,
         "HORSE": 40,
@@ -59,6 +63,7 @@
       "foodNeeded": 1,
       "maxInCell": 20,
       "startWeight": 6,
+      "plantConsume": 0,
       "huntingProbability": {
         "FOX": 10,
         "RABBIT": 90,
@@ -71,6 +76,7 @@
       "foodNeeded": 60,
       "maxInCell": 20,
       "startWeight": 400,
+      "plantConsume": 100,
       "huntingProbability": {
       }
     },
@@ -79,6 +85,7 @@
       "foodNeeded": 50,
       "maxInCell": 20,
       "startWeight": 300,
+      "plantConsume": 100,
       "huntingProbability": {
       }
     },
@@ -87,6 +94,7 @@
       "foodNeeded": 0.45,
       "maxInCell": 150,
       "startWeight": 2,
+      "plantConsume": 100,
       "huntingProbability": {
       }
     },
@@ -95,6 +103,7 @@
       "foodNeeded": 0.01,
       "maxInCell": 500,
       "startWeight": 0.05,
+      "plantConsume": 100,
       "huntingProbability": {
         "CATERPILLAR": 90
       }
@@ -104,6 +113,7 @@
       "foodNeeded": 10,
       "maxInCell": 140,
       "startWeight": 60,
+      "plantConsume": 100,
       "huntingProbability": {
       }
     },
@@ -112,6 +122,7 @@
       "foodNeeded": 15,
       "maxInCell": 140,
       "startWeight": 70,
+      "plantConsume": 100,
       "huntingProbability": {
       }
     },
@@ -120,6 +131,7 @@
       "foodNeeded": 50,
       "maxInCell": 50,
       "startWeight": 400,
+      "plantConsume": 100,
       "huntingProbability": {
         "MOUSE": 50,
         "CATERPILLAR": 90
@@ -130,6 +142,7 @@
       "foodNeeded": 100,
       "maxInCell": 10,
       "startWeight": 700,
+      "plantConsume": 100,
       "huntingProbability": {
       }
     },
@@ -138,15 +151,17 @@
       "foodNeeded": 0.15,
       "maxInCell": 200,
       "startWeight": 1,
+      "plantConsume": 100,
       "huntingProbability": {
         "CATERPILLAR": 90
       }
     },
     "CATERPILLAR": {
       "speed": 0,
-      "foodNeeded": 0,
+      "foodNeeded": 0.1,
       "maxInCell": 1000,
       "startWeight": 0.01,
+      "plantConsume": 100,
       "huntingProbability": {
       }
     }

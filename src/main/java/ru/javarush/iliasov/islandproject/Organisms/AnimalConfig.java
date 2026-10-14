@@ -12,14 +12,21 @@ public class AnimalConfig {
     private final Map<AnimalType, Integer> huntingProbability;
     private final int maxInCell;
     private final double startWeight;
+    private final int plantConsume;
 
     @JsonCreator
-    public AnimalConfig(@JsonProperty("speed") int speed,@JsonProperty("foodNeeded") double foodNeeded, @JsonProperty("huntingProbability") Map<AnimalType, Integer> huntingProbability, @JsonProperty("maxInCell") int maxInCell, @JsonProperty("startWeight") double startWeight) {
+    public AnimalConfig(@JsonProperty("speed") int speed,
+                        @JsonProperty("foodNeeded") double foodNeeded,
+                        @JsonProperty("huntingProbability") Map<AnimalType, Integer> huntingProbability,
+                        @JsonProperty("maxInCell") int maxInCell,
+                        @JsonProperty("startWeight") double startWeight,
+                        @JsonProperty("plantConsume") int plantConsume) {
         this.speed = speed;
         this.foodNeeded = foodNeeded;
         this.huntingProbability = Map.copyOf(huntingProbability);
         this.maxInCell = maxInCell;
         this.startWeight = startWeight;
+        this.plantConsume = plantConsume;
     }
 
 
@@ -43,10 +50,11 @@ public class AnimalConfig {
         return maxInCell;
     }
 
-
-
     public double getStartWeight(){
         return startWeight;
     }
 
+    public int getPlantConsume(){
+        return plantConsume;
+    }
 }

@@ -39,10 +39,11 @@ public class Animal {
     }
 
     public void eat(Animal prey) {
-        double foodConsumed = prey.getWeight();
-        setWeight(getWeight() + foodConsumed);
+        double preyWeight = prey.getWeight();
+        setWeight(getWeight() + preyWeight);
         prey.setAlive(false);
     }
+
 
     public void eatPlant(Plants plants) {
         double foodConsumed = plants.getWeight();

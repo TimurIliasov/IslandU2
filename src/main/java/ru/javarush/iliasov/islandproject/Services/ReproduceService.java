@@ -18,7 +18,7 @@ public class ReproduceService {
     private final Island island;
     private final RandomService randomService;
 
-    private final ExecutorService workers = Executors.newFixedThreadPool(10);
+    private final ExecutorService workers = Executors.newFixedThreadPool(4);
 
     public ReproduceService(AnimalFactory factory, Island island, RandomService randomService) {
         this.factory = factory;
@@ -76,8 +76,10 @@ public class ReproduceService {
 
     public void reproduceCell(Cell cell) {
         synchronized (cell) {
+            List<Animal> animalList = new ArrayList<>();
+            animalList.addAll(cell.getAnimalsList());
             Set<Animal> reproducedAnimals = new HashSet<>();
-            for (Animal animal : cell.getAnimalsList()) {
+            for (Animal animal : animalList) {
                 List<Animal> pair = findPair(animal, cell);
                 if (pair.size() == 2
                         && !reproducedAnimals.contains(pair.get(1))
@@ -109,7 +111,7 @@ public class ReproduceService {
         }
     }
 
-    public boolean isShutdown(){
+    public boolean isShutdown() {
         return workers.isShutdown();
     }
 }

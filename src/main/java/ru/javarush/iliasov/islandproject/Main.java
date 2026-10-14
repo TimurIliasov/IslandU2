@@ -1,17 +1,34 @@
 package ru.javarush.iliasov.islandproject;
 
+import org.fusesource.jansi.AnsiConsole;
+import ru.javarush.iliasov.islandproject.Organisms.AnimalFactory;
+import ru.javarush.iliasov.islandproject.Organisms.ConfigLoader;
+import ru.javarush.iliasov.islandproject.Services.*;
+import ru.javarush.iliasov.islandproject.controll.UI;
+
+import java.io.IOException;
+
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
-    public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+    public static void main(String[] args) throws IOException {
+        ConfigLoader configLoader = new ConfigLoader();
+        AnimalFactory factory = new AnimalFactory(configLoader);
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
-        }
+        Island island;
+        island = new Island(new Cell[2][2]);
+
+        RandomService randomService = new RandomService();
+        InitializationService initializationService = new InitializationService(randomService, configLoader, factory);
+        MovementService movementService = new MovementService(island);
+        EatingService eatingService = new EatingService(island);
+        ReproduceService reproduceService = new ReproduceService(factory, island, randomService);
+        StatisticsService statisticsService = new StatisticsService(island);
+
+
+        AnsiConsole.systemInstall();
+        SimulationService simulationService = new SimulationService(initializationService, movementService, eatingService, reproduceService, statisticsService, randomService, island);
+        UI ui = new UI(simulationService, island);
+        ui.start();
     }
 }
