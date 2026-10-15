@@ -21,6 +21,7 @@ public class ReproduceService {
         return animal.getConfig().getMaxInCell() > currentNumberOfSpecies;
     }
 
+    //метод проверяет что в клетке находится пара которая способна размножиться 
     public boolean hasAtLeastTwoAnimals(Animal animal, Cell cell){
         long currentNumberOfSpecies = cell.getCurrentAnimalCount(animal.getType());
         return currentNumberOfSpecies > 1;
