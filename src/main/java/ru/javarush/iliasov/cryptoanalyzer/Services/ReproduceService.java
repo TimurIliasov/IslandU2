@@ -16,7 +16,7 @@ public class ReproduceService {
         this.factory = factory;
     }
 
-    public boolean hasSpaceInCell(Animal animal, Cell cell){
+    public boolean hasSpaceInCell(Animal animal, Cell cell){ //метод проверят, осталось ли в клетке свободное место для животных определенного вида, с учетом ограничении maxInCell
         long currentNumberOfSpecies = cell.getCurrentAnimalCount(animal.getType());
         return animal.getConfig().getMaxInCell() > currentNumberOfSpecies;
     }
