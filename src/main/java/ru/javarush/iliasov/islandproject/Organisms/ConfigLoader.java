@@ -1,4 +1,4 @@
-package ru.javarush.iliasov.cryptoanalyzer.Organisms;
+package ru.javarush.iliasov.islandproject.Organisms;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
