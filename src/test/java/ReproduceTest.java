@@ -143,7 +143,7 @@ class ReproduceTest {
             cell.addAnimal(factory.create(animal.getType()));
         }
         long currentAnimalNumber = cell.getCurrentAnimalCount(animal.getType());
-        reproduceService.reproducePercent();
+        reproduceService.reproduceAll();
         long numberAfterReproduce = cell.getCurrentAnimalCount(animal.getType());
         assertEquals(currentAnimalNumber + 1, numberAfterReproduce);
     }

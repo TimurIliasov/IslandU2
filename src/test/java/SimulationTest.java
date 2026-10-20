@@ -1,13 +1,16 @@
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import ru.javarush.iliasov.islandproject.Cell;
 import ru.javarush.iliasov.islandproject.Island;
 import ru.javarush.iliasov.islandproject.Services.*;
 
 
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -36,6 +39,17 @@ class SimulationTest {
     @Mock
     Island island;
 
+    @BeforeEach
+    void init(){
+        island = new Island(new Cell[2][4]);
+        Cell cell = new Cell(new ArrayList<>(), new ArrayList<>());
+        for (int i = 0; i < island.getCells().length; i++) {
+            for (int j = 0; j < island.getCells()[i].length; j++) {
+                island.getCells()[i][j] = cell;
+            }
+        }
+    }
+
 
     @Test
     void shouldStartSimulation() {
@@ -46,7 +60,7 @@ class SimulationTest {
     }
 
     @Test
-    void shouldNotStartSimulationTwice(){
+    void shouldNotStartSimulationTwice() {
         SimulationService simulationService = createSimulationService();
         simulationService.startSimulation();
         simulationService.startSimulation();
@@ -70,7 +84,7 @@ class SimulationTest {
     }
 
     @Test
-    void shouldRestartSimulationAfterStop(){
+    void shouldRestartSimulationAfterStop() {
         SimulationService service = createSimulationService();
         service.startSimulation();
         service.stopSimulation();
@@ -80,10 +94,10 @@ class SimulationTest {
     }
 
     @Test
-    void shouldExecuteAllSimulationServices()  {
+    void shouldExecuteAllSimulationServices() {
         SimulationService service = createSimulationService();
         service.simulateStep();
-//        verify(movementService).moveAll(randomService);
+        verify(movementService).moveAll(randomService);
         verify(eatingService).eatAllCells(randomService);
         verify(reproduceService).reproduceAll();
         verify(statisticsService).getPlantsCount();

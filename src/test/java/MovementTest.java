@@ -69,7 +69,9 @@ class MovementTest {
         island.getCells()[2][2].addAnimal(animal);
         System.out.println(animal.getConfig().getSpeed());
 
-        MovementService movementService = new MovementService(island);
+
+        MovementService movementService = spy(new MovementService(island));
+
         movementService.moveAll(randomService);
 
         assertFalse(island.getCells()[2][2].getAnimalsList()

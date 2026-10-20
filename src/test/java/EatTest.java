@@ -71,6 +71,7 @@ class EatTest {
     void whenHunterCouldNotEatPrey(){
         cell.addAnimal(hunter);
         cell.addAnimal(prey);
+        cell.addPlant(new Plants());
         when(randomService.randomNumber()).thenReturn(78);
 
         double hunterWeight = hunter.getWeight();

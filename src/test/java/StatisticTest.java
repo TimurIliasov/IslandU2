@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class StatisticTest {
     ConfigLoader configLoader;
@@ -66,10 +68,11 @@ public class StatisticTest {
 
     @Test
     void whenStatisticsCountPlants(){
-        RandomService randomService = Mockito.mock(RandomService.class);
-        Mockito.when(randomService.getRandomNumber(200)).thenReturn(12);
+        RandomService randomService = mock(RandomService.class);
+        when(randomService.getRandomNumber(1000)).thenReturn(12);
         InitializationService service = new InitializationService(randomService, configLoader, factory);
         service.cellPlant(island);
+
         StatisticsService statisticsService = new StatisticsService(island);
         int plantsNumber = statisticsService.getPlantsCount();
         assertEquals(20*12, plantsNumber);
