@@ -14,9 +14,13 @@ import java.util.Map;
 public class ConfigLoader {
     private final Map<AnimalType, AnimalConfig> configs;
 
-    public ConfigLoader() throws IOException {
+    public ConfigLoader() {
         configs = new LinkedHashMap<>();
-        readValue();
+        try {
+            readValue();
+        }catch (IOException e){
+            System.out.println(e.getMessage());
+        }
     }
 
 

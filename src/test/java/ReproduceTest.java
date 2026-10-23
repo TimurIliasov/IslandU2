@@ -4,11 +4,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import ru.javarush.iliasov.islandproject.Cell;
 import ru.javarush.iliasov.islandproject.Island;
-import ru.javarush.iliasov.islandproject.Organisms.Animal;
-import ru.javarush.iliasov.islandproject.Organisms.AnimalFactory;
+import ru.javarush.iliasov.islandproject.Organisms.*;
 
-import ru.javarush.iliasov.islandproject.Organisms.AnimalType;
-import ru.javarush.iliasov.islandproject.Organisms.ConfigLoader;
+import ru.javarush.iliasov.islandproject.Services.EatingService;
 import ru.javarush.iliasov.islandproject.Services.RandomService;
 import ru.javarush.iliasov.islandproject.Services.ReproduceService;
 
@@ -317,4 +315,44 @@ class ReproduceTest {
         assertEquals(wolf.getConfig().getMaxInCell(), animalsAfter);
     }
 
+
+    @Test
+    void whenReproduceAfterEating(){
+        EatingService eatingService = new EatingService(island);
+        when(randomService.randomNumber()).thenReturn(24);
+
+        for (int i = 0; i < 25; i++) {
+            cell.addAnimal(factory.create(WOLF));
+        }
+
+        long currentWolf = cell.getCurrentAnimalCount(WOLF);
+        System.out.println("WOLFS befor: " + currentWolf);
+
+        for (int i = 0; i < 130; i++) {
+            cell.addAnimal(factory.create(RABBIT));
+            cell.addPlant(new Plants());
+        }
+
+        long currentRabbit = cell.getCurrentAnimalCount(RABBIT);
+        System.out.println("RABBITS befor: " + currentRabbit);
+
+        eatingService.eatAllCells(randomService);
+
+        long afterRabbit = cell.getCurrentAnimalCount(RABBIT);
+        System.out.println("RABBITS after: " + afterRabbit);
+
+        long afterWolf = cell.getCurrentAnimalCount(WOLF);
+        System.out.println("WOLVES after: " + afterWolf);
+
+        reproduceService.reproduceAll();
+
+        long rabbitsReproduced = cell.getCurrentAnimalCount(RABBIT);
+        long wolvesReproduced = cell.getCurrentAnimalCount(WOLF);
+
+        System.out.println("RABBITS after reproduce: " + rabbitsReproduced);
+        System.out.println("WOLVES after reproduce: " + wolvesReproduced);
+
+        assertEquals(afterRabbit + 1, rabbitsReproduced);
+        assertEquals(afterWolf + 1, wolvesReproduced);
+    }
 }

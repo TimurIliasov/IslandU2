@@ -18,7 +18,7 @@ public class DeathTest {
     Cell cell;
 
     @BeforeEach
-    void init() throws IOException {
+    void init(){
         this.factory = new AnimalFactory(new ConfigLoader());
         this.deathService = new DeathService();
         this.cell = new Cell(new ArrayList<>(), new ArrayList<>());

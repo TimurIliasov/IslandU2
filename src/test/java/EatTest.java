@@ -1,8 +1,5 @@
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.javarush.iliasov.islandproject.Cell;
 import ru.javarush.iliasov.islandproject.Island;
@@ -20,6 +17,7 @@ import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+
 class EatTest {
     ConfigLoader configLoader;
     AnimalFactory factory;
@@ -29,8 +27,14 @@ class EatTest {
     EatingService eatingService;
     Island island;
     RandomService randomService;
+
+    @BeforeAll
+    static void setup(){
+        System.out.println("@BeforeAll executed");
+    }
+
     @BeforeEach
-    void init() throws IOException {
+    void init(){
         island = new Island(new Cell[5][5]);
         configLoader = new ConfigLoader();
         factory = new AnimalFactory(configLoader);
@@ -53,7 +57,13 @@ class EatTest {
         eatingService.shutdown();
     }
 
+    @AfterAll
+    static void tear(){
+        System.out.println("@AfterAll executed");
+    }
+
     @Test
+    @DisplayName("Gaining weight")
     void whenAnimalEatsAnimalGainsWeight()  {
         when(randomService.randomNumber()).thenReturn(24);
         cell.addAnimal(hunter);
@@ -96,6 +106,7 @@ class EatTest {
     }
 
     @Test
+    @DisplayName("Remove animal")
     void whenAnimalGetsEaten_thenItsRemovedFromCell(){
         when(randomService.randomNumber()).thenReturn(24);
 
@@ -272,5 +283,22 @@ class EatTest {
         assertEquals(rabbitCount - 1, rabbitCountAfterHunt);
         assertEquals(wolfCount, wolfCountAfterHunt);
     }
+
+    @Test
+    void whenHungerKillsAnimal(){
+        when(randomService.randomNumber()).thenReturn(80);
+
+        cell.addAnimal(factory.create(AnimalType.WOLF));
+        cell.addAnimal(factory.create(AnimalType.RABBIT));
+        cell.addPlant(new Plants());
+
+        eatingService.eatAllCells(randomService);
+
+        long afterWolf = cell.getCurrentAnimalCount(AnimalType.WOLF);
+
+        assertEquals(0, afterWolf);
+    }
+
+
 }
 
