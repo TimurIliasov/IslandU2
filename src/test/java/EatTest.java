@@ -7,7 +7,6 @@ import ru.javarush.iliasov.islandproject.Organisms.*;
 import ru.javarush.iliasov.islandproject.Services.EatingService;
 import ru.javarush.iliasov.islandproject.Services.RandomService;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;

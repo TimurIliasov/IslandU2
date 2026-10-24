@@ -2,6 +2,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.javarush.iliasov.islandproject.Cell;
 import ru.javarush.iliasov.islandproject.Island;
@@ -25,15 +28,16 @@ class MovementTest {
     Cell cell;
     AnimalFactory factory;
     Animal animal;
+    @Mock
     private RandomService randomService;
     Movement movement;
+    @Mock
     MovementService movementService;
 
     @BeforeEach
     void init() throws IOException {
         factory = new AnimalFactory(new ConfigLoader());
         island = new Island(new Cell[5][5]);
-        randomService = new RandomService();
         animal = factory.create(WOLF);
         movementService = spy(new MovementService(island));
         for (int i = 0; i < island.getCells().length; i++) {
@@ -62,17 +66,16 @@ class MovementTest {
             }
         }
 
-
-        ConfigLoader configLoader = new ConfigLoader();
-        AnimalFactory factory = new AnimalFactory(configLoader);
-        Animal animal = factory.create(WOLF);
+        when(randomService.getRandomNumber(animal.getConfig().getSpeed())).thenReturn(1);
+        when(randomService.getRandomNumber(3)).thenReturn(2);
         island.getCells()[2][2].addAnimal(animal);
         System.out.println(animal.getConfig().getSpeed());
-
-
-        MovementService movementService = spy(new MovementService(island));
+        System.out.println(Mockito.mockingDetails(randomService).isMock());
+        movementService.createMovement(animal, 1, 2, randomService);
 
         movementService.moveAll(randomService);
+
+        verify(movementService).createMovement(animal, 1, 2, randomService);
 
         assertFalse(island.getCells()[2][2].getAnimalsList()
                 .contains(animal));
