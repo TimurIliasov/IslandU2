@@ -25,7 +25,7 @@ public class MovementService {
 
     public Movement createMovement(Animal animal, int i, int j, RandomService randomService) {
         int distance = randomService.getRandomNumber(animal.getConfig().getSpeed());
-        int direction = randomService.getRandomNumber(3);
+        int direction = randomService.getRandomDirection(3);
         int newI = i;
         int newJ = j;
 

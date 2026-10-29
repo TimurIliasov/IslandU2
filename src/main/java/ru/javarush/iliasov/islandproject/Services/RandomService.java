@@ -11,4 +11,8 @@ public class RandomService {
     public int getRandomNumber(int maxInCell){
         return  ThreadLocalRandom.current().nextInt(maxInCell + 1);
     }
+
+    public int getRandomDirection(int maxInCell){
+        return ThreadLocalRandom.current().nextInt(maxInCell);
+    }
 }

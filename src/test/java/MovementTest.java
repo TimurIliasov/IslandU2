@@ -57,17 +57,10 @@ class MovementTest {
     }
 
     @Test
-    void testingMovementServiceReallyWorks() throws IOException {
-
-        for (int i = 0; i < island.getCells().length; i++) {
-            for (int j = 0; j < island.getCells()[i].length; j++) {
-                Cell cell = new Cell(new ArrayList<>(), new ArrayList<>());
-                island.getCells()[i][j] = cell;
-            }
-        }
+    void testingMovementServiceReallyWorks() {
 
         when(randomService.getRandomNumber(animal.getConfig().getSpeed())).thenReturn(1);
-        when(randomService.getRandomNumber(3)).thenReturn(2);
+        when(randomService.getRandomDirection(3)).thenReturn(2);
         island.getCells()[2][2].addAnimal(animal);
         System.out.println(animal.getConfig().getSpeed());
         System.out.println(Mockito.mockingDetails(randomService).isMock());
@@ -206,6 +199,32 @@ class MovementTest {
 
         verify(movementService, times(1)).createMovement(eq(wolf), anyInt(), anyInt(), eq(randomService));
 
+    }
+    @Test
+    void whenReproduceWorksAfterMovement(){
+        when(randomService.getRandomNumber(animal.getConfig().getSpeed())).thenReturn(1);
+        when(randomService.getRandomDirection(3)).thenReturn(1);
+
+        Animal wolfPapa = factory.create(AnimalType.WOLF);
+        Animal wolfMama = factory.create(AnimalType.WOLF);
+
+        cell.addAnimal(wolfPapa);
+        cell.addAnimal(wolfMama);
+
+        long wolfBefore = cell.getCurrentAnimalCount(AnimalType.WOLF);
+
+        movementService.moveAll(randomService);
+
+
+        for (int i = 0; i < island.getCells().length; i++) {
+            for (int j = 0; j < island.getCells()[i].length; j++) {
+                Cell currentCell = island.getCells()[i][j];
+
+                if (currentCell.getAnimalsList().contains(wolfPapa)){
+                    System.out.println("Wolf located here: [" + i + "] ["  + j + "]");
+                }
+            }
+        }
     }
 
 }
