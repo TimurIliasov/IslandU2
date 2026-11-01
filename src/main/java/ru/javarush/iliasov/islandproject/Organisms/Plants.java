@@ -2,7 +2,7 @@ package ru.javarush.iliasov.islandproject.Organisms;
 
 public class Plants {
     private static final double weight = 1;
-    private static final int MAX_IN_CELL = 1000;
+    private static final int MAX_IN_CELL = 200;
 
     public Plants() {
 

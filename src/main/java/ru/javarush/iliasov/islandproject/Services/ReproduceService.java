@@ -1,15 +1,13 @@
 package ru.javarush.iliasov.islandproject.Services;
 
 import ru.javarush.iliasov.islandproject.Cell;
+import ru.javarush.iliasov.islandproject.Exceptions.MaxInCellException;
 import ru.javarush.iliasov.islandproject.Island;
 import ru.javarush.iliasov.islandproject.Organisms.Animal;
 import ru.javarush.iliasov.islandproject.Organisms.AnimalFactory;
 
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.*;
 
 
@@ -28,6 +26,9 @@ public class ReproduceService {
 
     public boolean hasSpaceInCell(Animal animal, Cell cell) {
         long currentNumberOfSpecies = cell.getCurrentAnimalCount(animal.getType());
+        if (currentNumberOfSpecies > animal.getConfig().getMaxInCell()) {
+            throw new MaxInCellException("Animals in cell is overflowed!");
+        }
         return animal.getConfig().getMaxInCell() > currentNumberOfSpecies;
     }
 
@@ -37,15 +38,15 @@ public class ReproduceService {
         return currentNumberOfSpecies > 1;
     }
 
-    public List<Animal> findPair(Animal animal, Cell cell) {
-        List<Animal> animalListPair = new ArrayList<>();
-        if (hasSpaceInCell(animal, cell) && hasAtLeastTwoAnimals(animal, cell)) {
-            animalListPair = cell.getAnimalsList()
-                    .stream()
-                    .filter(animal1 -> animal1.getType().equals(animal.getType()))
-                    .limit(2).toList();
+    public Animal findPair(Animal animal, List<Animal> animalList, Set<Animal> reproducedAnimals) {
+        Animal pair = null;
+        for (Animal candidate : animalList) {
+            if (candidate != animal && candidate.getType() == animal.getType() && !reproducedAnimals.contains(candidate)) {
+                return candidate;
+            }
+            pair = candidate;
         }
-        return animalListPair;
+        return pair;
     }
 
     public void reproduce(Animal animal, Cell cell) {
@@ -69,6 +70,10 @@ public class ReproduceService {
                 Thread.currentThread().interrupt();
                 throw new RuntimeException(e);
             } catch (ExecutionException e) {
+                Throwable cause = e.getCause();
+                if (cause instanceof MaxInCellException maxInCellException) {
+                    throw maxInCellException;
+                }
                 throw new RuntimeException(e);
             }
         }
@@ -76,18 +81,25 @@ public class ReproduceService {
 
     public void reproduceCell(Cell cell) {
         synchronized (cell) {
-            List<Animal> animalList = new ArrayList<>();
-            animalList.addAll(cell.getAnimalsList());
-            Set<Animal> reproducedAnimals = new HashSet<>();
+            List<Animal> animalList = new ArrayList<>(cell.getAnimalsList());
+            Set<Animal> reproducedAnimals = Collections.newSetFromMap(new IdentityHashMap<>());
             for (Animal animal : animalList) {
-                List<Animal> pair = findPair(animal, cell);
-                if (pair.size() == 2
-                        && !reproducedAnimals.contains(pair.get(1))
-                        && !reproducedAnimals.contains(pair.get(0))
-                        && reproducePercent()) {
+                if (reproducedAnimals.contains(animal)
+                        || !hasSpaceInCell(animal, cell)
+                        || !hasAtLeastTwoAnimals(animal, cell)) {
+                    continue;
+                }
+
+                Animal partner = findPair(animal, animalList, reproducedAnimals);
+                if (partner == null){
+                    continue;
+                }
+
+                reproducedAnimals.add(animal);
+                reproducedAnimals.add(partner);
+
+                if (reproducePercent()) {
                     reproduce(animal, cell);
-                    reproducedAnimals.add(pair.get(0));
-                    reproducedAnimals.add(pair.get(1));
                 }
             }
         }

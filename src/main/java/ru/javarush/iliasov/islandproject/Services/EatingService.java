@@ -47,7 +47,7 @@ public class EatingService {
         return foodEaten;
     }
 
-    public void hunger(Cell cell, RandomService randomService){
+    public void hunger(Cell cell, RandomService randomService) {
         Map<Animal, Double> plantMap = new LinkedHashMap<>(plantsInCell(cell));
         Map<Animal, Double> animalDoubleMap = new LinkedHashMap<>(eatInCell(cell, randomService));
 
@@ -56,10 +56,10 @@ public class EatingService {
         plantMap.forEach(((animal, food) ->
                 totalFoodConsumed.merge(animal, food, Double::sum)));
 
-        for (Animal animal: cell.getAnimalsList()){
+        for (Animal animal : cell.getAnimalsList()) {
             double totalFood = totalFoodConsumed.getOrDefault(animal, 0.0);
 
-            if (totalFood < animal.getConfig().getFoodNeeded()/8){
+            if (totalFood < animal.getConfig().getFoodNeeded() / 8) {
                 animal.setAlive(false);
             }
         }
@@ -71,7 +71,7 @@ public class EatingService {
                 && prey.getAlive();
     }
 
-    private boolean canEatPlants(Animal animal){
+    private boolean canEatPlants(Animal animal) {
         return animal.getConfig().getPlantConsume() > 0;
     }
 
@@ -92,7 +92,7 @@ public class EatingService {
         List<Plants> plantsList = new ArrayList<>(cell.getPlantsList());
         Map<Animal, Double> foodEaten = new LinkedHashMap<>();
         for (Animal animal : new ArrayList<>(cell.getAnimalsList())) {
-            if (!canEatPlants(animal) || !animal.getAlive()){
+            if (!canEatPlants(animal) || !animal.getAlive()) {
                 continue;
             }
             Iterator<Plants> plantsIterator = plantsList.iterator();
@@ -100,13 +100,13 @@ public class EatingService {
             double foodConsumed = 0;
 
             while (plantsIterator.hasNext() && foodConsumed < animal.getConfig().getFoodNeeded()) {
-                    Plants plant = plantsIterator.next();
+                Plants plant = plantsIterator.next();
 
-                    eatPlant(animal, plant, cell);
+                eatPlant(animal, plant, cell);
 
-                    foodConsumed += plant.getWeight();
+                foodConsumed += plant.getWeight();
 
-                    plantsIterator.remove();
+                plantsIterator.remove();
             }
             foodEaten.put(animal, foodConsumed);
         }
@@ -139,11 +139,11 @@ public class EatingService {
         }
     }
 
-    public void shutdown(){
+    public void shutdown() {
         workers.shutdown();
 
         try {
-            if (!workers.awaitTermination(5, TimeUnit.SECONDS)){
+            if (!workers.awaitTermination(5, TimeUnit.SECONDS)) {
                 workers.shutdownNow();
             }
         } catch (InterruptedException e) {

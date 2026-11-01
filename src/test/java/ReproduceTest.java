@@ -84,7 +84,9 @@ class ReproduceTest {
         for (int i = 0; i < animal.getConfig().getMaxInCell() - 1; i++) {
             cell.addAnimal(animal);
         }
-        assertEquals(2, reproduceService.findPair(animal, cell).size());
+        List<Animal> animalList = new ArrayList<>(cell.getAnimalsList());
+        Set<Animal> reproducedAnimal = Collections.newSetFromMap(new IdentityHashMap<>());
+        assertEquals(2, reproduceService.findPair(animal, animalList, reproducedAnimal));
     }
 
     @Test

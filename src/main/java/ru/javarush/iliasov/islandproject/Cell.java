@@ -35,6 +35,12 @@ public class Cell {
         return animalsList.add(animal);
     }
 
+    public void addToCell(int number, Animal animal){
+        for (int i = 0; i < number; i++) {
+            addAnimal(animal);
+        }
+    }
+
     public boolean removeAnimal(Animal animal) {
         return animalsList.remove(animal);
     }

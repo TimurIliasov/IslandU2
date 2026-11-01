@@ -13,26 +13,19 @@ import ru.javarush.iliasov.islandproject.Services.*;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class WorkingTest {
-    @Mock
     Island island;
     Cell cell;
     AnimalFactory factory;
-    @Mock
     MovementService movementService;
     RandomService randomService;
-    @Mock
     EatingService eatingService;
-    @Mock
     ReproduceService reproduceService;
-    @Mock
     DeathService deathService;
-    @InjectMocks
     SimulationService simulationService;
 
     @BeforeEach
@@ -41,10 +34,16 @@ public class WorkingTest {
         cell = new Cell(new ArrayList<>(), new ArrayList<>());
         factory = new AnimalFactory(new ConfigLoader());
         randomService = mock(RandomService.class);
-        movementService = new MovementService(island);
-        eatingService = new EatingService(island);
-        reproduceService = new ReproduceService(factory, island, randomService);
+        movementService = spy(new MovementService(island));
+        eatingService = spy(new EatingService(island));
+        reproduceService = spy(new ReproduceService(factory, island, randomService));
         deathService = new DeathService();
+        simulationService = spy(new SimulationService(new InitializationService(randomService, new ConfigLoader(), factory), movementService,
+                eatingService,
+                reproduceService,
+                new StatisticsService(island),
+                randomService,
+                island));
 
         for (int i = 0; i < island.getCells().length; i++) {
             for (int j = 0; j < island.getCells()[i].length; j++) {
@@ -59,6 +58,8 @@ public class WorkingTest {
     @AfterEach
     void tear(){
         movementService.shutdown();
+        eatingService.shutdown();
+        reproduceService.shutdown();
     }
 
     @RepeatedTest(5)
@@ -101,63 +102,118 @@ public class WorkingTest {
     }
 
 
-    @Test
-    void whenDeathReallyWorks(){
-        cell.addAnimal(factory.create(AnimalType.WOLF));
-        cell.addAnimal(factory.create(AnimalType.WOLF));
-
-        Animal rabbit = factory.create(AnimalType.RABBIT);
-        cell.addAnimal(rabbit);
-        cell.addAnimal(factory.create(AnimalType.RABBIT));
-        cell.addAnimal(factory.create(AnimalType.RABBIT));
-        cell.addAnimal(factory.create(AnimalType.RABBIT));
-        for (int i = 0; i < 4; i++) {
-            cell.addPlant(new Plants());
-        }
-
-        long currentRabbit = cell.getCurrentAnimalCount(AnimalType.RABBIT);
-        when(randomService.randomNumber()).thenReturn(24);
-
-        eatingService.eatAllCells(randomService);
-        reproduceService.reproduceAll();
-
-        long afterRabbit = cell.getCurrentAnimalCount(AnimalType.RABBIT);
-
-        assertEquals(currentRabbit - 1, afterRabbit);
-    }
 
     @Test
     void whenSimulationWorks(){
         Animal wolf = factory.create(AnimalType.WOLF);
         Animal rabbit = factory.create(AnimalType.RABBIT);
-        Plants plants = new Plants();
 
-        for (int i = 0; i < wolf.getConfig().getMaxInCell(); i++) {
+        for (int i = 0; i < wolf.getConfig().getMaxInCell() - 1; i++) {
             cell.addAnimal(factory.create(AnimalType.WOLF));
         }
         for (int i = 0; i < rabbit.getConfig().getMaxInCell(); i++) {
             cell.addAnimal(factory.create(AnimalType.RABBIT));
         }
-        for (int i = 0; i < plants.getMaxInCell(); i++) {
+        for (int i = 0; i < Plants.getMaxInCell(); i++) {
             cell.addPlant(new Plants());
         }
 
-        when(randomService.randomNumber()).thenReturn(24);
+        simulationService.simulateStep();
+
+        verify(movementService).moveAll(randomService);
+        verify(eatingService).eatAllCells(randomService);
+        verify(reproduceService).reproduceAll();
+    }
+
+    @Test
+    void whenSimulationFeedsAndReproduceAnimals(){
+        for (int i = 0; i < 25; i++) {
+            cell.addAnimal(factory.create(AnimalType.WOLF));
+            cell.addAnimal(factory.create(AnimalType.RABBIT));
+        }
+
+        when(randomService.getRandomNumber(200)).thenReturn(200);
+
+        long currentWolves = cell.getCurrentAnimalCount(AnimalType.WOLF);
+        long currentRabbits = cell.getCurrentAnimalCount(AnimalType.RABBIT);
+        long currentPlants = cell.getCurrentPlantsCount();
 
         simulationService.simulateStep();
 
-        for (int i = 0; i < island.getCells().length; i++) {
-            for (int j = 0; j < island.getCells()[i].length; j++) {
-                Cell currentCell = island.getCells()[i][j];
+        long wolvesAfter = cell.getCurrentAnimalCount(AnimalType.WOLF);
+        long rabbitsAfter = cell.getCurrentAnimalCount(AnimalType.RABBIT);
+        long plantsAfter = cell.getCurrentPlantsCount();
 
-                if (currentCell.getAnimalsList().contains(wolf)){
-                    System.out.println("Wolf located here: [" + i + "] [" + j + "]");
-                }
-                if (currentCell.getAnimalsList().contains(rabbit)){
-                    System.out.println("Rabbit located here: [" + i + "] [" + j + "]");
-                }
-            }
+
+        assertEquals(currentWolves + 1, wolvesAfter);
+        assertEquals(currentRabbits - 25, rabbitsAfter);
+        assertEquals(currentPlants + 174, plantsAfter);
+
+    }
+
+    @Test
+    void shouldCreateOneOffspringWhenFourWolvesAreInCell(){
+        for (int i = 0; i < 4; i++) {
+            cell.addAnimal(factory.create(AnimalType.WOLF));
         }
 
+        long currentWolves = cell.getCurrentAnimalCount(AnimalType.WOLF);
+
+        reproduceService.reproduceAll();
+
+        long wolvesAfter = cell.getCurrentAnimalCount(AnimalType.WOLF);
+
+        assertEquals(currentWolves + 1, wolvesAfter);
+    }
+
+    @Test
+    void whenEatingKillsEveryPrey(){
+        for (int i = 0; i < 30; i++) {
+            cell.addAnimal(factory.create(AnimalType.WOLF));
+            cell.addAnimal(factory.create(AnimalType.RABBIT));
+            cell.addPlant(new Plants());
+        }
+        long currentRabbits = cell.getCurrentAnimalCount(AnimalType.RABBIT);
+        long currentWolves = cell.getCurrentAnimalCount(AnimalType.WOLF);
+
+        when(randomService.randomNumber()).thenReturn(24);
+
+        eatingService.eatAllCells(randomService);
+
+        long rabbitsAfter = cell.getCurrentAnimalCount(AnimalType.RABBIT);
+        long wolvesAfter = cell.getCurrentAnimalCount(AnimalType.WOLF);
+
+
+        assertEquals(currentWolves, wolvesAfter);
+        assertEquals(currentRabbits - 30, rabbitsAfter, "All rabbits must die");
+    }
+
+    @Test
+    void whenOneWolfDoesNotReproduce(){
+        cell.addAnimal(factory.create(AnimalType.WOLF));
+
+        long currentWolf = cell.getCurrentAnimalCount(AnimalType.WOLF);
+
+        reproduceService.reproduceAll();
+
+        long wolfAfter = cell.getCurrentAnimalCount(AnimalType.WOLF);
+
+        assertEquals(currentWolf, wolfAfter);
+    }
+
+    @Test
+    void whenMaxLimitDoNotReproduce(){
+        Animal wolf = factory.create(AnimalType.WOLF);
+
+        for (int i = 0; i < wolf.getConfig().getMaxInCell(); i++) {
+            cell.addAnimal(factory.create(AnimalType.WOLF));
+        }
+        long currentWolves = cell.getCurrentAnimalCount(AnimalType.WOLF);
+
+        reproduceService.reproduceAll();
+
+        long wolvesAfter = cell.getCurrentAnimalCount(AnimalType.WOLF);
+
+        assertEquals(currentWolves, wolvesAfter);
     }
 }

@@ -88,7 +88,7 @@ public class SimulationService {
         if (plantCount >= Plants.getMaxInCell()) {
             return;
         }
-        int random = ThreadLocalRandom.current().nextInt(numberLeftToMax + 1);
+        int random = randomService.getRandomNumber(numberLeftToMax);
 
         for (int i = 0; i < random; i++) {
             Plants plants = new Plants();
